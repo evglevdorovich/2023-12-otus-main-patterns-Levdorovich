@@ -1,7 +1,6 @@
 package com.example.spaceship.command;
 
 import com.example.spaceship.model.Movable;
-import com.example.spaceship.model.Position;
 
 public class MoveCommand {
     private final Movable movable;
@@ -11,21 +10,16 @@ public class MoveCommand {
     }
 
     public void execute() {
-        var initialPosition = movable.getPosition();
-        var initialVelocity = movable.getVelocity();
-
         validateMovableToBeExecutable();
 
-        var finalPosition = new Position(initialPosition.getX() + initialVelocity.getDx(),
-                initialPosition.getY() + initialVelocity.getDy());
-        movable.setPosition(finalPosition);
+        movable.getPosition().plus(movable.getVelocity());
     }
 
     private void validateMovableToBeExecutable() {
-        if (movable.getPosition() == null) {
+        if (movable.getPosition() == null || movable.getPosition().size() == 0) {
             throw new IllegalArgumentException("position should not be empty");
         }
-        if (movable.getVelocity() == null) {
+        if (movable.getVelocity() == null || movable.getVelocity().size() == 0) {
             throw new IllegalArgumentException("velocity should not be empty");
         }
     }

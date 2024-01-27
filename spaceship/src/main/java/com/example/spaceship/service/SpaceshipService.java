@@ -2,8 +2,8 @@ package com.example.spaceship.service;
 
 import com.example.spaceship.command.MoveCommand;
 import com.example.spaceship.command.RotateCommand;
-import com.example.spaceship.model.Position;
 import com.example.spaceship.model.Spaceship;
+import com.example.spaceship.model.Vector;
 import com.example.spaceship.repository.SpaceshipRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class SpaceshipService {
     private final SpaceshipRepository spaceshipRepository;
 
-    public Position move(Long id) {
+    public Vector move(Long id) {
         var spaceship = spaceshipRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         new MoveCommand(spaceship).execute();
 

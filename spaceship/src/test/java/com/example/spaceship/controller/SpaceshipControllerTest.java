@@ -1,12 +1,14 @@
 package com.example.spaceship.controller;
 
-import com.example.spaceship.model.Position;
+import com.example.spaceship.model.Vector;
 import com.example.spaceship.service.SpaceshipService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -21,7 +23,7 @@ class SpaceshipControllerTest {
     @Test
     void shouldMoveSpaceship() {
         var spaceshipId = 1L;
-        var expectedPosition = new Position(1, 1);
+        var expectedPosition = new Vector(List.of(1, 1));
         when(spaceshipService.move(spaceshipId)).thenReturn(expectedPosition);
 
         var actualPosition = spaceshipController.move(spaceshipId);

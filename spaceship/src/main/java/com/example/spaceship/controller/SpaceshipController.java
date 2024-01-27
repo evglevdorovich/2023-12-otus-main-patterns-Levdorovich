@@ -1,6 +1,6 @@
 package com.example.spaceship.controller;
 
-import com.example.spaceship.model.Position;
+import com.example.spaceship.model.Vector;
 import com.example.spaceship.service.SpaceshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +13,7 @@ public class SpaceshipController {
     private final SpaceshipService spaceshipService;
 
     @PostMapping("/spaceships/{id}/move")
-    public Position move(@PathVariable Long id) {
+    public Vector move(@PathVariable Long id) {
         return spaceshipService.move(id);
     }
 

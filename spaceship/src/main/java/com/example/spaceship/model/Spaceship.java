@@ -1,5 +1,8 @@
 package com.example.spaceship.model;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,10 +28,12 @@ public class Spaceship implements Movable, Rotatable {
 
     @Embedded
     @Setter
-    private Position position;
+    @AttributeOverride(name="coordinates", column=@Column(name="position_coordinates"))
+    private Vector position;
 
     @Embedded
-    private Velocity velocity;
+    @AttributeOverride(name="coordinates", column=@Column(name="velocity_coordinates"))
+    private Vector velocity;
 
     @Setter
     private int direction;

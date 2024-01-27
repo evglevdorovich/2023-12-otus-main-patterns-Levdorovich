@@ -1,8 +1,7 @@
 package com.example.spaceship.service;
 
-import com.example.spaceship.model.Position;
 import com.example.spaceship.model.Spaceship;
-import com.example.spaceship.model.Velocity;
+import com.example.spaceship.model.Vector;
 import com.example.spaceship.repository.SpaceshipRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
@@ -12,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,10 +36,10 @@ class SpaceshipServiceTest {
 
     @Test
     void shouldMoveSpaceship() {
-        var initialPosition = new Position(1, 2);
+        var initialPosition = new Vector(new ArrayList<>(List.of(1, 2)));
         var initialSpaceship = getSpaceship(initialPosition);
 
-        val expectedMovedPosition = new Position(2, 4);
+        val expectedMovedPosition = new Vector(List.of(2, 4));
         var savedSpaceship = getSpaceship(expectedMovedPosition);
 
         when(spaceshipRepository.findById(SPACESHIP_ID)).thenReturn(Optional.of(initialSpaceship));
@@ -50,7 +51,7 @@ class SpaceshipServiceTest {
 
     @Test
     void shouldThrowExceptionWhenSpaceshipIsNotSaved() {
-        var initialPosition = new Position(1, 2);
+        var initialPosition = new Vector(new ArrayList<>(List.of(1, 2)));
 
         when(spaceshipRepository.findById(SPACESHIP_ID)).thenReturn(Optional.of(getSpaceship(initialPosition)));
         when(spaceshipRepository.save(getSpaceship(initialPosition))).thenThrow(RuntimeException.class);
@@ -78,11 +79,11 @@ class SpaceshipServiceTest {
         assertThatThrownBy(() -> spaceshipService.rotate(anyLong())).isInstanceOf(EntityNotFoundException.class);
     }
 
-    private static Spaceship getSpaceship(Position position) {
+    private static Spaceship getSpaceship(Vector position) {
         return Spaceship.builder()
                 .id(SPACESHIP_ID)
                 .position(position)
-                .velocity(new Velocity(1, 2))
+                .velocity(position)
                 .build();
     }
 
