@@ -11,8 +11,7 @@ public class MoveCommand {
 
     public void execute() {
         validateMovableToBeExecutable();
-
-        movable.getPosition().plus(movable.getVelocity());
+        movable.setPosition(movable.getPosition().plus(movable.getVelocity()));
     }
 
     private void validateMovableToBeExecutable() {

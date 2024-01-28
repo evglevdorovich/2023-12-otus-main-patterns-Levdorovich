@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,13 +28,11 @@ class MoveCommandTest {
         var expectedFinalPosition = new Vector(List.of(5, 8));
 
         when(movable.getPosition()).thenReturn(initialPosition);
-        when(movable.getPosition()).thenReturn(initialPosition);
-        when(movable.getVelocity()).thenReturn(velocity);
         when(movable.getVelocity()).thenReturn(velocity);
 
         var command = new MoveCommand(movable);
         command.execute();
-        assertThat(initialPosition).isEqualTo(expectedFinalPosition);
+        verify(movable).setPosition(expectedFinalPosition);
     }
 
     @Test

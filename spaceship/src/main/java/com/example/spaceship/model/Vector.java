@@ -3,6 +3,7 @@ package com.example.spaceship.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -11,11 +12,14 @@ public class Vector {
     private List<Integer> coordinates;
 
     public Vector plus(Vector vectorToPlus) {
+        var resultCoordinates = new ArrayList<Integer>();
+
         var minSize = Math.min(this.size(), vectorToPlus.size());
         for (int i = 0; i < minSize; i++) {
-            this.coordinates.set(i, this.coordinates.get(i) + vectorToPlus.getCoordinates().get(i));
+            resultCoordinates.add(this.coordinates.get(i) + vectorToPlus.getCoordinates().get(i));
         }
-        return this;
+
+        return new Vector(resultCoordinates);
     }
 
     public int size() {
