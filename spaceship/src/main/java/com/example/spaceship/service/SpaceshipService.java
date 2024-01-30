@@ -24,6 +24,7 @@ public class SpaceshipService {
     public int rotate(Long id) {
         var spaceship = spaceshipRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         new RotateCommand(spaceship).execute();
+
         return save(spaceship).getDirection();
     }
 

@@ -2,7 +2,7 @@ package com.example.spaceship.command;
 
 import com.example.spaceship.model.Rotatable;
 
-public class RotateCommand {
+public class RotateCommand implements Command {
     private final Rotatable rotatable;
 
     public RotateCommand(Rotatable rotatable) {
