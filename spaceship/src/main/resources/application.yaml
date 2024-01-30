@@ -9,3 +9,6 @@ spring:
 
 queue:
     init-capacity: 10000
+
+second-retry:
+    enable: true

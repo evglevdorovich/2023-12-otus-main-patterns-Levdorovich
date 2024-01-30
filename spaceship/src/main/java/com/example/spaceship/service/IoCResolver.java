@@ -1,16 +1,16 @@
 package com.example.spaceship.service;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
+@Component
 public class IoCResolver<T, U, R> {
-    private final Map<Class<? extends U>, Boolean> valuePlugins;
-
     private final Map<Class<? extends T>, Map<Class<? extends U>, BiFunction<T, U, R>>> resolvableHandlers;
 
     public IoCResolver() {
-        this.valuePlugins = new ConcurrentHashMap<>();
         this.resolvableHandlers = new ConcurrentHashMap<>();
     }
 
@@ -34,9 +34,5 @@ public class IoCResolver<T, U, R> {
         var functions = resolvableHandlers.computeIfAbsent(keyClass, k -> new ConcurrentHashMap<>());
         functions.put(valueClass, handler);
         resolvableHandlers.put(keyClass, functions);
-    }
-
-    public void registerValuePlugin(Class<? extends U> valueClass, boolean isEnabled) {
-        valuePlugins.put(valueClass, isEnabled);
     }
 }
