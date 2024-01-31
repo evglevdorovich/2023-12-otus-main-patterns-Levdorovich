@@ -2,7 +2,7 @@ package com.example.spaceship.command;
 
 import com.example.spaceship.model.Movable;
 
-public class MoveCommand {
+public class MoveCommand implements Command {
     private final Movable movable;
 
     public MoveCommand(Movable movable) {
