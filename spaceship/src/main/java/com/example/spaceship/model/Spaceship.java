@@ -20,7 +20,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Spaceship implements Movable, Rotatable {
+public class Spaceship implements Movable, Rotatable, FuelConsumer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -40,4 +40,17 @@ public class Spaceship implements Movable, Rotatable {
     private int directionsNumber;
 
     private int angularVelocity;
+
+    @Embedded
+    private Fuel fuel;
+
+    @Override
+    public int getFuelAmount() {
+        return fuel.getAmount();
+    }
+
+    @Override
+    public void decreaseFuelAmount(int amountToDecrease) {
+        fuel.decrease(amountToDecrease);
+    }
 }
