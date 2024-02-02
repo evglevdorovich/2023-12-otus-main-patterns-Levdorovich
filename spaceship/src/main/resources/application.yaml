@@ -14,4 +14,4 @@ second-retry:
     enable: true
 
 fuel:
-    amount-consumption: 5
+
