@@ -25,8 +25,8 @@ class CommandMoveFactoryTest {
     void shouldReturnMoveAndBurnFuelCommand() {
         var commandMoveFactory = new CommandMoveFactory();
         FuelConsumer fuelConsumer = movable;
-        List<Command> moveAndBurnFuelCommands = List.of(new CheckFuelCommand(fuelConsumer),
-                new BurnFuelCommand(fuelConsumer), new MoveCommand(movable));
+        List<Command> moveAndBurnFuelCommands = List.of(new CheckFuelCommand(fuelConsumer), new MoveCommand(movable),
+        new BurnFuelCommand(fuelConsumer));
 
         var expectedMoveAndBurnFuelCommand = new MacroCommand(moveAndBurnFuelCommands);
 

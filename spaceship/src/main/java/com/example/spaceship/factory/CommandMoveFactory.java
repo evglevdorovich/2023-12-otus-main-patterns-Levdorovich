@@ -23,10 +23,11 @@ public class CommandMoveFactory {
 
         if (movable instanceof FuelConsumer) {
             commands.add(new CheckFuelCommand((FuelConsumer) movable));
+            commands.add(new MoveCommand(movable));
             commands.add(new BurnFuelCommand((FuelConsumer) movable));
+        } else {
+            commands.add(new MoveCommand(movable));
         }
-        commands.add(new MoveCommand(movable));
-
         return new MacroCommand(Collections.unmodifiableList(commands));
     }
 }
