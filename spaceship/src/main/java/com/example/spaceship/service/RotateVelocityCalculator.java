@@ -10,6 +10,6 @@ import java.util.List;
 public class RotateVelocityCalculator {
     // stub
     public Vector calculateVelocity(Rotatable rotatable) {
-        return null;
+        return new Vector(List.of(1, 2));
     }
 }
