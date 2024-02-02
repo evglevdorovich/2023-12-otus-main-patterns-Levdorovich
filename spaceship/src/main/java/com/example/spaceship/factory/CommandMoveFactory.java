@@ -18,12 +18,12 @@ import java.util.Collections;
 public class CommandMoveFactory {
 
 
-    public MacroCommand buildMoveAndBurnFuelCommand(Movable movable, int fuelConsumption) {
+    public MacroCommand buildMoveAndBurnFuelCommand(Movable movable) {
         var commands = new ArrayList<Command>();
 
         if (movable instanceof FuelConsumer) {
-            commands.add(new CheckFuelCommand((FuelConsumer) movable, fuelConsumption));
-            commands.add(new BurnFuelCommand((FuelConsumer) movable, fuelConsumption));
+            commands.add(new CheckFuelCommand((FuelConsumer) movable));
+            commands.add(new BurnFuelCommand((FuelConsumer) movable));
         }
         commands.add(new MoveCommand(movable));
 

@@ -1,6 +1,5 @@
 package com.example.spaceship.command;
 
-import com.example.spaceship.exception.CommandException;
 import com.example.spaceship.model.FuelConsumer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,21 +17,17 @@ class CheckFuelCommandTest {
 
     @Test
     void shouldThrowNothingWhenFuelIsEnough() {
-        var fuelDemand = 5;
-        var enoughFuelAmount = 5;
-        var checkFuelCommand = new CheckFuelCommand(fuelConsumer, fuelDemand);
+        var checkFuelCommand = new CheckFuelCommand(fuelConsumer);
+        when(fuelConsumer.isEnoughToConsume()).thenReturn(true);
 
-        when(fuelConsumer.getFuelAmount()).thenReturn(enoughFuelAmount);
         assertThatNoException().isThrownBy(checkFuelCommand::execute);
     }
 
     @Test
     void shouldThrowCommandExceptionWhenFuelIsNotEnough() {
-        var fuelDemand = 5;
-        var notEnoughFuelAmount = 4;
-        var checkFuelCommand = new CheckFuelCommand(fuelConsumer, fuelDemand);
+        var checkFuelCommand = new CheckFuelCommand(fuelConsumer);
 
-        when(fuelConsumer.getFuelAmount()).thenReturn(notEnoughFuelAmount);
+        when(fuelConsumer.isEnoughToConsume()).thenReturn(false);
 
         assertThatThrownBy(checkFuelCommand::execute).isInstanceOf(IllegalStateException.class);
     }

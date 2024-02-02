@@ -15,12 +15,11 @@ class BurnFuelCommandTest {
 
     @Test
     void shouldBurnFuel() {
-        var fuelToBurn = 5;
-        var burnFuelCommand = new BurnFuelCommand(fuelConsumer, fuelToBurn);
+        var burnFuelCommand = new BurnFuelCommand(fuelConsumer);
 
         burnFuelCommand.execute();
 
-        verify(fuelConsumer).decreaseFuelAmount(fuelToBurn);
+        verify(fuelConsumer).consumeFuel();
     }
 
 }

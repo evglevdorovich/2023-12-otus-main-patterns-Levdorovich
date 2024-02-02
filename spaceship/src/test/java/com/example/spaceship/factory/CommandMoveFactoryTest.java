@@ -24,14 +24,13 @@ class CommandMoveFactoryTest {
     @Test
     void shouldReturnMoveAndBurnFuelCommand() {
         var commandMoveFactory = new CommandMoveFactory();
-        var fuelConsumption = 5;
         FuelConsumer fuelConsumer = movable;
-        List<Command> moveAndBurnFuelCommands = List.of(new CheckFuelCommand(fuelConsumer, fuelConsumption),
-                new BurnFuelCommand(fuelConsumer, fuelConsumption), new MoveCommand(movable));
+        List<Command> moveAndBurnFuelCommands = List.of(new CheckFuelCommand(fuelConsumer),
+                new BurnFuelCommand(fuelConsumer), new MoveCommand(movable));
 
         var expectedMoveAndBurnFuelCommand = new MacroCommand(moveAndBurnFuelCommands);
 
-        var actualMoveAndBurnFuelCommand = commandMoveFactory.buildMoveAndBurnFuelCommand(movable, fuelConsumption);
+        var actualMoveAndBurnFuelCommand = commandMoveFactory.buildMoveAndBurnFuelCommand(movable);
 
         assertThat(actualMoveAndBurnFuelCommand).isEqualTo(expectedMoveAndBurnFuelCommand);
     }
