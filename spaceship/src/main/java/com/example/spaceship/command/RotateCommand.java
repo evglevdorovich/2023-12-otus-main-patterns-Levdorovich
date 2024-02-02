@@ -1,13 +1,9 @@
 package com.example.spaceship.command;
 
 import com.example.spaceship.model.Rotatable;
+import lombok.Data;
 
-public class RotateCommand implements Command {
-    private final Rotatable rotatable;
-
-    public RotateCommand(Rotatable rotatable) {
-        this.rotatable = rotatable;
-    }
+public record RotateCommand(Rotatable rotatable) implements Command {
 
     public void execute() {
         if (rotatable.getDirectionsNumber() <= 0) {

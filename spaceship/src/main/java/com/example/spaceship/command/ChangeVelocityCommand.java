@@ -2,13 +2,8 @@ package com.example.spaceship.command;
 
 import com.example.spaceship.model.Vector;
 import com.example.spaceship.model.VelocityAdjustable;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class ChangeVelocityCommand implements Command {
-    private final VelocityAdjustable velocityAdjustable;
-    private final Vector newVelocity;
-
+public record ChangeVelocityCommand(VelocityAdjustable velocityAdjustable, Vector newVelocity) implements Command {
     @Override
     public void execute() {
         velocityAdjustable.setVelocity(newVelocity);
