@@ -2,12 +2,7 @@ package com.example.spaceship.command;
 
 import com.example.spaceship.model.Movable;
 
-public class MoveCommand implements Command {
-    private final Movable movable;
-
-    public MoveCommand(Movable movable) {
-        this.movable = movable;
-    }
+public record MoveCommand(Movable movable) implements Command {
 
     public void execute() {
         validateMovableToBeExecutable();

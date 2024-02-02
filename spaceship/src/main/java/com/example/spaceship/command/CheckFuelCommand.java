@@ -1,14 +1,8 @@
 package com.example.spaceship.command;
 
-import com.example.spaceship.exception.CommandException;
 import com.example.spaceship.model.FuelConsumer;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class CheckFuelCommand implements Command {
-    private final FuelConsumer fuelConsumer;
-    private final int fuelAmountDemand;
-
+public record CheckFuelCommand(FuelConsumer fuelConsumer, int fuelAmountDemand) implements Command {
     @Override
     public void execute() {
         if (fuelConsumer.getFuelAmount() < fuelAmountDemand) {

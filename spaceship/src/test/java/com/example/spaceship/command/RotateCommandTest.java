@@ -36,6 +36,6 @@ class RotateCommandTest {
     void shouldThrowIllegalArgumentExceptionIfDirectionsNumberIsZero(){
         when(rotatable.getDirectionsNumber()).thenReturn(0);
         var rotateCommand = new RotateCommand(rotatable);
-        assertThatThrownBy(() -> rotateCommand.execute()).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(rotateCommand::execute).isInstanceOf(IllegalArgumentException.class);
     }
 }
