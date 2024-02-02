@@ -1,6 +1,7 @@
 package com.example.spaceship.command;
 
 import com.example.spaceship.model.Vector;
+import com.example.spaceship.model.VelocityAdjustable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

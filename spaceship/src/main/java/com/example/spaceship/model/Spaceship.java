@@ -1,6 +1,5 @@
 package com.example.spaceship.model;
 
-import com.example.spaceship.command.VelocityAdjustable;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

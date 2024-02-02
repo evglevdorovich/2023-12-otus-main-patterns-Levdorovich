@@ -1,4 +1,4 @@
-package com.example.spaceship.command;
+package com.example.spaceship.model;
 
 import com.example.spaceship.model.Vector;
 
