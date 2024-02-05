@@ -20,7 +20,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Spaceship implements Movable, Rotatable {
+public class Spaceship implements Movable, Rotatable, FuelConsumer, VelocityAdjustable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -32,6 +32,7 @@ public class Spaceship implements Movable, Rotatable {
 
     @Embedded
     @AttributeOverride(name = "coordinates", column = @Column(name = "velocity_coordinates"))
+    @Setter
     private Vector velocity;
 
     @Setter
@@ -40,4 +41,24 @@ public class Spaceship implements Movable, Rotatable {
     private int directionsNumber;
 
     private int angularVelocity;
+
+    @Embedded
+    private Fuel fuel;
+
+    private int fuelConsumption;
+
+    @Override
+    public int getFuelAmount() {
+        return fuel.getAmount();
+    }
+
+    @Override
+    public void consumeFuel() {
+        fuel.decrease(fuelConsumption);
+    }
+
+    @Override
+    public boolean isEnoughToConsume() {
+        return fuel.getAmount() >= fuelConsumption;
+    }
 }
