@@ -7,10 +7,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
 @Component
-public class IoCResolver<T, U, R> {
+public class IoC<T, U, R> {
     private final Map<Class<? extends T>, Map<Class<? extends U>, BiFunction<T, U, R>>> resolvableHandlers;
 
-    public IoCResolver() {
+    public IoC() {
         this.resolvableHandlers = new ConcurrentHashMap<>();
     }
 

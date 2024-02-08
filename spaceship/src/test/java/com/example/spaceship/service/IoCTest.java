@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class IoCResolverTest {
+class IoCTest {
     @Test
     void shouldResolveHandlers() {
-        var ioCResolver = new IoCResolver<Object, Exception, String>();
+        var ioCResolver = new IoC<Object, Exception, String>();
         var keyObject = new Object();
         var valueObject = new Exception();
         var expectedHandlingResult = "test";
@@ -22,7 +22,7 @@ class IoCResolverTest {
 
     @Test
     void shouldThrowIllegalArgumentExceptionWhenHandlersNotFound() {
-        var ioCResolver = new IoCResolver<Object, Exception, String>();
+        var ioCResolver = new IoC<Object, Exception, String>();
         var keyObject = new Object();
         var valueObject = new Exception();
 
@@ -31,7 +31,7 @@ class IoCResolverTest {
 
     @Test
     void shouldThrowIllegalArgumentExceptionWhenFunctionNotFoundForValueClass() {
-        var ioCResolver = new IoCResolver<Object, Exception, String>();
+        var ioCResolver = new IoC<Object, Exception, String>();
         var keyObject = new Object();
         var notRegisteredValueObject = new Exception();
         var registeredValueObject = new IllegalArgumentException();

@@ -2,7 +2,7 @@ package com.example.spaceship.listener;
 
 import com.example.spaceship.command.Command;
 import com.example.spaceship.service.CommandQueueService;
-import com.example.spaceship.service.IoCResolver;
+import com.example.spaceship.service.IoC;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CommandListener {
     private final CommandQueueService commandQueueService;
-    private final IoCResolver<Command, Exception, Command> ioCResolver;
+    private final IoC<Command, Exception, Command> ioC;
     private volatile boolean readyToStop = false;
 
     public void listen() {
@@ -19,7 +19,7 @@ public class CommandListener {
             try {
                 command.execute();
             } catch (Exception e) {
-                commandQueueService.add(ioCResolver.resolve(command, e));
+                commandQueueService.add(ioC.resolve(command, e));
             }
         }
     }

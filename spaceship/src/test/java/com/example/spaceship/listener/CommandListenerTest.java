@@ -2,7 +2,7 @@ package com.example.spaceship.listener;
 
 import com.example.spaceship.command.Command;
 import com.example.spaceship.service.CommandQueueService;
-import com.example.spaceship.service.IoCResolver;
+import com.example.spaceship.service.IoC;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ class CommandListenerTest {
     @Mock
     private Command command;
     @Mock
-    private IoCResolver<Command, Exception, Command> ioCResolver;
+    private IoC<Command, Exception, Command> ioC;
     @InjectMocks
     private CommandListener commandListener;
 
@@ -49,7 +49,7 @@ class CommandListenerTest {
         CommandListener spyListener = spy(commandListener);
         when(queueService.poll()).thenReturn(command);
         doThrow(RuntimeException.class).when(command).execute();
-        when(ioCResolver.resolve(eq(command), isA(RuntimeException.class))).thenReturn(secondCommand);
+        when(ioC.resolve(eq(command), isA(RuntimeException.class))).thenReturn(secondCommand);
 
         when(spyListener.isReadyToStop()).thenReturn(false, true);
 
