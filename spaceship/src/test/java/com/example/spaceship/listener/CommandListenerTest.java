@@ -20,12 +20,13 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CommandListenerTest {
+    private static final String EXCEPTION_HANDLER_POSTFIX = ".exception.handler";
     @Mock
     private CommandQueueService queueService;
     @Mock
     private Command command;
     @Mock
-    private IoC<Command, Exception, Command> ioC;
+    private IoC<Command> ioC;
     @InjectMocks
     private CommandListener commandListener;
 
@@ -49,7 +50,7 @@ class CommandListenerTest {
         CommandListener spyListener = spy(commandListener);
         when(queueService.poll()).thenReturn(command);
         doThrow(RuntimeException.class).when(command).execute();
-        when(ioC.resolve(eq(command), isA(RuntimeException.class))).thenReturn(secondCommand);
+        when(ioC.resolve(eq(command.getClass() + EXCEPTION_HANDLER_POSTFIX), isA(Object[].class))).thenReturn(secondCommand);
 
         when(spyListener.isReadyToStop()).thenReturn(false, true);
 

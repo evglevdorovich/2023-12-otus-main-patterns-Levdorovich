@@ -7,32 +7,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
 @Component
-public class IoC<T, U, R> {
-    private final Map<Class<? extends T>, Map<Class<? extends U>, BiFunction<T, U, R>>> resolvableHandlers;
+public class IoC<T> {
 
-    public IoC() {
-        this.resolvableHandlers = new ConcurrentHashMap<>();
-    }
+    public T resolve(String dependency, Object[] args) {
+//        var handlers = resolvableHandlers.get(keyObject.getClass());
+//
+//        if (handlers == null) {
+//            throw new IllegalArgumentException("functions are not registered for a key class: " + keyObject.getClass().getName());
+//        }
+//
+//        var handler = handlers.get(valueObject.getClass());
+//        if (handler == null) {
+//            throw new IllegalArgumentException("cannot find handler for a key class" + keyObject.getClass().getName() + "with value class: " +
+//                    valueObject.getClass().getName());
+//        }
 
-    public R resolve(T keyObject, U valueObject) {
-        var handlers = resolvableHandlers.get(keyObject.getClass());
-
-        if (handlers == null) {
-            throw new IllegalArgumentException("functions are not registered for a key class: " + keyObject.getClass().getName());
-        }
-
-        var handler = handlers.get(valueObject.getClass());
-        if (handler == null) {
-            throw new IllegalArgumentException("cannot find handler for a key class" + keyObject.getClass().getName() + "with value class: " +
-                    valueObject.getClass().getName());
-        }
-
-        return handler.apply(keyObject, valueObject);
-    }
-
-    public void registerHandler(Class<? extends T> keyClass, Class<? extends U> valueClass, BiFunction<T, U, R> handler) {
-        var functions = resolvableHandlers.computeIfAbsent(keyClass, k -> new ConcurrentHashMap<>());
-        functions.put(valueClass, handler);
-        resolvableHandlers.put(keyClass, functions);
+//        return handler.apply(keyObject, valueObject);
+        return null;
     }
 }

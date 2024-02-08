@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CommandListener {
+    private static final String EXCEPTION_HANDLER_POSTFIX = ".exception.handler";
     private final CommandQueueService commandQueueService;
-    private final IoC<Command, Exception, Command> ioC;
+    private final IoC<Command> ioC;
     private volatile boolean readyToStop = false;
 
     public void listen() {
@@ -19,16 +20,16 @@ public class CommandListener {
             try {
                 command.execute();
             } catch (Exception e) {
-                commandQueueService.add(ioC.resolve(command, e));
+                commandQueueService.add(ioC.resolve(command.getClass() + EXCEPTION_HANDLER_POSTFIX, new Object[]{e}));
             }
         }
     }
 
-    boolean isReadyToStop() {
-        return readyToStop;
-    }
-
     public void stop() {
         readyToStop = true;
+    }
+
+    boolean isReadyToStop() {
+        return readyToStop;
     }
 }
