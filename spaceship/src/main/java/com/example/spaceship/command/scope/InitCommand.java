@@ -29,6 +29,7 @@ public class InitCommand implements Command {
 
         LOCK.lock();
         try {
+
             if (isAlreadyExecuted) {
                 return;
             }
