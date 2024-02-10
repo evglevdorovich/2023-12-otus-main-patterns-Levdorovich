@@ -2,7 +2,7 @@ package com.example.spaceship.command.scope;
 
 import com.example.spaceship.command.Command;
 
-public record InitCommand() implements Command {
+public class InitCommand implements Command {
     private static final ThreadLocal<Object> SCOPE = new ThreadLocal<>();
 
     @Override
