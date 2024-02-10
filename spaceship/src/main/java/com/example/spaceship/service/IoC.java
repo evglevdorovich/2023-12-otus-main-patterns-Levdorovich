@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @Component
-public class IoC<T> {
+public class IoC {
 
     @SuppressWarnings("unchecked")
     @Getter
@@ -26,7 +26,7 @@ public class IoC<T> {
     };
 
     @SuppressWarnings("unchecked")
-    public T resolve(String dependency, Object[] args) {
+    public static <T> T resolve (String dependency, Object[] args) {
         return (T) dependencyStrategy.apply(dependency, args);
     }
 }

@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,8 +27,6 @@ class CommandListenerTest {
     private CommandQueueService queueService;
     @Mock
     private Command command;
-    @Mock
-    private IoC<Command> ioC;
     @InjectMocks
     private CommandListener commandListener;
 
@@ -50,9 +50,12 @@ class CommandListenerTest {
         CommandListener spyListener = spy(commandListener);
         when(queueService.poll()).thenReturn(command);
         doThrow(RuntimeException.class).when(command).execute();
-        when(ioC.resolve(eq(command.getClass() + EXCEPTION_HANDLER_POSTFIX), isA(Object[].class))).thenReturn(secondCommand);
-
         when(spyListener.isReadyToStop()).thenReturn(false, true);
+
+        try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
+            ioC.when(IoC.resolve(eq(command.getClass() + EXCEPTION_HANDLER_POSTFIX), isA(Object[].class))).thenReturn(secondCommand);
+            spyListener.listen();
+        }
 
         spyListener.listen();
 

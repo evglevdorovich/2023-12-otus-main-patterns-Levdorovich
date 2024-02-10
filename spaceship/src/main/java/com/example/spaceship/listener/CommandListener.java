@@ -1,6 +1,5 @@
 package com.example.spaceship.listener;
 
-import com.example.spaceship.command.Command;
 import com.example.spaceship.service.CommandQueueService;
 import com.example.spaceship.service.IoC;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 public class CommandListener {
     private static final String EXCEPTION_HANDLER_POSTFIX = ".exception.handler";
     private final CommandQueueService commandQueueService;
-    private final IoC<Command> ioC;
     private volatile boolean readyToStop = false;
 
     public void listen() {
@@ -20,7 +18,7 @@ public class CommandListener {
             try {
                 command.execute();
             } catch (Exception e) {
-                commandQueueService.add(ioC.resolve(command.getClass() + EXCEPTION_HANDLER_POSTFIX, new Object[]{e}));
+                commandQueueService.add(IoC.resolve(command.getClass() + EXCEPTION_HANDLER_POSTFIX, new Object[]{e}));
             }
         }
     }

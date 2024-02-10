@@ -15,21 +15,19 @@ class IoCTest {
 
     @Test
     void shouldResolveHandlers() {
-        var ioCResolver = new IoC<>();
         Function<BiFunction<String, Object[], Object>, BiFunction<String, Object[], Object>> updateDependencyStrategy = a -> a;
         var args = new Object[]{updateDependencyStrategy};
         var expectedResolvedObject = new UpdateIoCResolveDependencyStrategyCommand(updateDependencyStrategy);
 
-        var actualResolvedObject = ioCResolver.resolve(UPDATE_DEPENDENCY_STRATEGY_NAME, args);
+        var actualResolvedObject = IoC.resolve(UPDATE_DEPENDENCY_STRATEGY_NAME, args);
         assertThat(actualResolvedObject).isEqualTo(expectedResolvedObject);
     }
 
     @Test
     void shouldThrowIllegalArgumentExceptionWhenHandlersNotFound() {
-        var ioCResolver = new IoC<>();
         var anotherDependencyName = "otherDependencyName";
 
-        assertThatThrownBy(() -> ioCResolver.resolve(anotherDependencyName, ARGS)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> IoC.resolve(anotherDependencyName, ARGS)).isInstanceOf(IllegalArgumentException.class);
     }
 
 }
