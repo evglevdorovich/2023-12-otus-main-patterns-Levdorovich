@@ -26,7 +26,7 @@ public class IoC {
     };
 
     @SuppressWarnings("unchecked")
-    public static <T> T resolve (String dependency, Object[] args) {
+    public static <T> T resolve (String dependency, Object... args) {
         return (T) dependencyStrategy.apply(dependency, args);
     }
 }

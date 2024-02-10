@@ -12,7 +12,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class IoCTest {
     private static final String UPDATE_DEPENDENCY_STRATEGY_NAME = UpdateIoCResolveDependencyStrategyCommand.class.getSimpleName();
-    private static final Object[] ARGS = new Object[]{};
 
     @Test
     void shouldResolveHandlers() {
@@ -28,7 +27,7 @@ class IoCTest {
     void shouldThrowIllegalArgumentExceptionWhenHandlersNotFound() {
         var anotherDependencyName = "otherDependencyName";
 
-        assertThatThrownBy(() -> IoC.resolve(anotherDependencyName, ARGS)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> IoC.resolve(anotherDependencyName)).isInstanceOf(IllegalArgumentException.class);
     }
 
 }

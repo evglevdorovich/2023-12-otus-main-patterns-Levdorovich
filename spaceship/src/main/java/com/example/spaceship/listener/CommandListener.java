@@ -18,7 +18,7 @@ public class CommandListener {
             try {
                 command.execute();
             } catch (Exception e) {
-                commandQueueService.add(IoC.resolve(command.getClass() + EXCEPTION_HANDLER_POSTFIX, new Object[]{e}));
+                commandQueueService.add(IoC.resolve(command.getClass() + EXCEPTION_HANDLER_POSTFIX, e));
             }
         }
     }

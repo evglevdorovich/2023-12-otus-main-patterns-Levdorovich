@@ -1,6 +1,7 @@
 package com.example.spaceship.command.ioc;
 
 import com.example.spaceship.core.IoC;
+import com.example.spaceship.model.core.Scope;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
@@ -14,19 +15,19 @@ import static org.mockito.Mockito.mockStatic;
 class RegisterDependencyCommandTest {
     @Test
     void shouldRegisterDependency() {
-        var currentScope = new HashMap<String, Function<Object[], Object>>();
+        var currentScope = new Scope("id", new HashMap<>());
         String dependency = "dependencyName";
         Function<Object[], Object> dependencyResolution = a -> a;
-        var expectedCurrentScope = Map.of(dependency, dependencyResolution);
+        var expectedCurrentDependencyResolutions = Map.of(dependency, dependencyResolution);
 
         var registerDependencyCommand = new RegisterDependencyCommand(dependency, dependencyResolution);
 
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
-            ioC.when(IoC.resolve("IoC.Scope.Current", new Object[]{})).thenReturn(currentScope);
+            ioC.when(IoC.resolve("IoC.Scope.Current")).thenReturn(currentScope);
             registerDependencyCommand.execute();
         }
 
-        assertThat(currentScope).containsExactlyInAnyOrderEntriesOf(expectedCurrentScope);
+        assertThat(currentScope.getDependencyResolutions()).containsExactlyInAnyOrderEntriesOf(expectedCurrentDependencyResolutions);
 
     }
 
