@@ -1,4 +1,4 @@
-package com.example.spaceship.command.ioc;
+package com.example.spaceship.command.scope;
 
 import org.junit.jupiter.api.Test;
 
