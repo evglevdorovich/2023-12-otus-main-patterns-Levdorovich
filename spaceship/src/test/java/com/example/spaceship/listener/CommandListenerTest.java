@@ -2,7 +2,7 @@ package com.example.spaceship.listener;
 
 import com.example.spaceship.command.Command;
 import com.example.spaceship.service.CommandQueueService;
-import com.example.spaceship.service.IoC;
+import com.example.spaceship.core.IoC;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

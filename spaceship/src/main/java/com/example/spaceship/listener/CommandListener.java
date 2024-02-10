@@ -1,7 +1,7 @@
 package com.example.spaceship.listener;
 
 import com.example.spaceship.service.CommandQueueService;
-import com.example.spaceship.service.IoC;
+import com.example.spaceship.core.IoC;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.example.spaceship.service;
+package com.example.spaceship.core;
 
 import com.example.spaceship.command.ioc.UpdateIoCResolveDependencyStrategyCommand;
 import lombok.Getter;
