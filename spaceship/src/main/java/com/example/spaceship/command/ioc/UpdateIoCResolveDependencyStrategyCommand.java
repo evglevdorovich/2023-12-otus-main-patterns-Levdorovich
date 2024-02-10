@@ -1,5 +1,6 @@
-package com.example.spaceship.command;
+package com.example.spaceship.command.ioc;
 
+import com.example.spaceship.command.Command;
 import com.example.spaceship.service.IoC;
 
 import java.util.function.BiFunction;

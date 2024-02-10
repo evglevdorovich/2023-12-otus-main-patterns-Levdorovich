@@ -1,6 +1,6 @@
 package com.example.spaceship.service;
 
-import com.example.spaceship.command.UpdateIoCResolveDependencyStrategyCommand;
+import com.example.spaceship.command.ioc.UpdateIoCResolveDependencyStrategyCommand;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.BiFunction;

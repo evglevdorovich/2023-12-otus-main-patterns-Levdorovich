@@ -1,5 +1,6 @@
-package com.example.spaceship.command;
+package com.example.spaceship.command.ioc;
 
+import com.example.spaceship.command.ioc.UpdateIoCResolveDependencyStrategyCommand;
 import com.example.spaceship.service.IoC;
 import org.junit.jupiter.api.Test;
 
