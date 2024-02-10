@@ -15,4 +15,12 @@ public class Scope {
     public Function<Object[], Object> put(String dependencyName, Function<Object[], Object> expectedDependencyResolution) {
         return dependencyResolutions.put(dependencyName, expectedDependencyResolution);
     }
+
+    public boolean containsDependencyResolution(String dependencyResolutionName) {
+        return dependencyResolutions.containsKey(dependencyResolutionName);
+    }
+
+    public Function<Object[], Object> getDependency(String dependencyResolutionName) {
+        return dependencyResolutions.get(dependencyResolutionName);
+    }
 }
