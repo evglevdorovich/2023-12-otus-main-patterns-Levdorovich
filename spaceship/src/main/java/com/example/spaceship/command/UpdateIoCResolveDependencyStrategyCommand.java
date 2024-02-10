@@ -1,5 +1,7 @@
 package com.example.spaceship.command;
 
+import com.example.spaceship.service.IoC;
+
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -8,6 +10,7 @@ public record UpdateIoCResolveDependencyStrategyCommand(
 
     @Override
     public void execute() {
-
+        var updatedDependencyStrategy = updateDependencyStrategy.apply(IoC.getDependencyStrategy());
+        IoC.setDependencyStrategy(updatedDependencyStrategy);
     }
 }
