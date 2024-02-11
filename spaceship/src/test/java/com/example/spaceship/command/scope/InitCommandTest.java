@@ -1,20 +1,14 @@
 package com.example.spaceship.command.scope;
 
-import com.example.spaceship.command.ioc.RegisterDependencyCommand;
-import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.core.Scope;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
 
 class InitCommandTest {
     private static final String ROOT_ID = "root";
@@ -35,7 +29,7 @@ class InitCommandTest {
         initCommand.execute();
         var expectedRootScopeDependencyResolutionNames = List.of("IoC.Scope.Current.Set", "IoC.Scope.Current.Clear", "IoC.Scope.Current",
                 "IoC.Scope.Create.Empty", "IoC.Scope.Create", "IoC.Register", "IoC.Scope.Parent");
-        assertThat(InitCommand.ROOT_SCOPE.getDependencyResolutions()).containsOnlyKeys(expectedRootScopeDependencyResolutionNames);
+        assertThat(InitCommand.ROOT_SCOPE.dependencyResolutions()).containsOnlyKeys(expectedRootScopeDependencyResolutionNames);
 
     }
 

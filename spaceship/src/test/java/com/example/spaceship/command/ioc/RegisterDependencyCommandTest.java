@@ -27,7 +27,7 @@ class RegisterDependencyCommandTest {
             registerDependencyCommand.execute();
         }
 
-        assertThat(currentScope.getDependencyResolutions()).containsExactlyInAnyOrderEntriesOf(expectedCurrentDependencyResolutions);
+        assertThat(currentScope.dependencyResolutions()).containsExactlyInAnyOrderEntriesOf(expectedCurrentDependencyResolutions);
 
     }
 

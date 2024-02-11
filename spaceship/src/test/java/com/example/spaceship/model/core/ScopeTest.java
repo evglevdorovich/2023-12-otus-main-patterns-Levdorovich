@@ -20,7 +20,7 @@ class ScopeTest {
         var scope = new Scope(SCOPE_ID, new HashMap<>());
         scope.put(EXISTING_DEPENDENCY_RESOLUTION_NAME, DEPENDENCY_RESOLUTION);
 
-        var actualDependencyResolutions = scope.getDependencyResolutions();
+        var actualDependencyResolutions = scope.dependencyResolutions();
 
         assertThat(actualDependencyResolutions).containsExactlyInAnyOrderEntriesOf(expectedDependencyResolutions);
     }
