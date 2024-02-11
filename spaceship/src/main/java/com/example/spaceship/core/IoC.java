@@ -13,6 +13,7 @@ import java.util.function.Function;
 @Component
 public class IoC {
     @Getter(AccessLevel.PACKAGE)
+    @SuppressWarnings("unchecked")
     private static final BiFunction<String, Object[], Object> initialDependencyStrategy = (dependencyName, args) -> {
 
         if (!Objects.equals(dependencyName, UpdateIoCResolveDependencyStrategyCommand.class.getSimpleName())) {
@@ -23,7 +24,6 @@ public class IoC {
                 (Function<BiFunction<String, Object[], Object>, BiFunction<String, Object[], Object>>) args[0]);
     };
 
-    @SuppressWarnings("unchecked")
     @Getter
     @Setter
     private static BiFunction<String, Object[], Object> dependencyStrategy = initialDependencyStrategy;

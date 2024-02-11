@@ -2,7 +2,6 @@ package com.example.spaceship.command.scope;
 
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.core.Scope;
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InitCommandTest {
 
     @AfterEach
-     void cleanUp() {
+    void cleanUp() {
         InitCommand.isAlreadyExecuted = false;
         InitCommand.setCurrentScope(null);
         IoC.clear();
     }
+
     @Test
     void shouldSetScope() {
         var expectedScope = new Scope("id", Collections.emptyMap());

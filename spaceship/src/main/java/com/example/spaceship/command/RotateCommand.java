@@ -1,7 +1,6 @@
 package com.example.spaceship.command;
 
 import com.example.spaceship.model.Rotatable;
-import lombok.Data;
 
 public record RotateCommand(Rotatable rotatable) implements Command {
 
