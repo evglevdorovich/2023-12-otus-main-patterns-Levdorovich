@@ -1,6 +1,9 @@
 package com.example.spaceship.command.scope;
 
+import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.core.Scope;
+import org.aspectj.lang.annotation.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,8 +14,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class InitCommandTest {
-    private static final String ROOT_ID = "root";
 
+    @AfterEach
+     void cleanUp() {
+        InitCommand.isAlreadyExecuted = false;
+        InitCommand.setCurrentScope(null);
+        IoC.clear();
+    }
     @Test
     void shouldSetScope() {
         var expectedScope = new Scope("id", Collections.emptyMap());
@@ -30,7 +38,6 @@ class InitCommandTest {
         var expectedRootScopeDependencyResolutionNames = List.of("IoC.Scope.Current.Set", "IoC.Scope.Current.Clear", "IoC.Scope.Current",
                 "IoC.Scope.Create.Empty", "IoC.Scope.Create", "IoC.Register", "IoC.Scope.Parent");
         assertThat(InitCommand.ROOT_SCOPE.dependencyResolutions()).containsOnlyKeys(expectedRootScopeDependencyResolutionNames);
-
     }
 
     //imitate multiple threads trying to execute init command - checks that double lock checking is working

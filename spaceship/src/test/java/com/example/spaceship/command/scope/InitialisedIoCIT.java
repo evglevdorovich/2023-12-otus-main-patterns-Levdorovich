@@ -3,7 +3,6 @@ package com.example.spaceship.command.scope;
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.core.Scope;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,14 +13,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class InitialisedIoCIT {
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void init() {
         new InitCommand().execute();
     }
 
     @AfterEach
     void clean() {
         InitCommand.setCurrentScope(null);
+        InitCommand.isAlreadyExecuted = false;
+        IoC.clear();
     }
 
     @Test
@@ -64,4 +65,6 @@ class InitialisedIoCIT {
 
         assertThat(actualScope).isEqualTo(scope);
     }
+
+
 }
