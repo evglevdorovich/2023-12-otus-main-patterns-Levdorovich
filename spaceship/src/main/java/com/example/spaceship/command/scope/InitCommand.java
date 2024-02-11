@@ -18,6 +18,17 @@ public class InitCommand implements Command {
     private static final ThreadLocal<Scope> CURRENT_SCOPE = new ThreadLocal<>();
     private static final ReentrantLock LOCK = new ReentrantLock();
     private static final String SCOPE_PARENT = "IoC.Scope.Parent";
+    private static final Function<Object[], Object> CREATE_SCOPE_STRATEGY = args -> {
+        var creatingScope = IoC.<Scope>resolve("IoC.Scope.Create.Empty", args[0]);
+        if (args.length > 1) {
+            var parentScope = args[1];
+            creatingScope.put(SCOPE_PARENT, arg -> parentScope);
+        } else {
+            var parentScope = IoC.<Scope>resolve("IoC.Scope.Current");
+            creatingScope.put(SCOPE_PARENT, arg -> parentScope);
+        }
+        return creatingScope;
+    };
     static boolean isAlreadyExecuted = false;
 
     @Override
@@ -42,27 +53,11 @@ public class InitCommand implements Command {
                 throw new IllegalStateException("root cannot have a parent");
             });
             ROOT_SCOPE.put("IoC.Scope.Create.Empty", args -> new Scope((String) args[0], new HashMap<>()));
-            ROOT_SCOPE.put("IoC.Scope.Create", args -> {
-                var creatingScope = IoC.<Scope>resolve("IoC.Scope.Create.Empty", args[0]);
-                if (args.length > 1) {
-                    var parentScope = args[1];
-                    creatingScope.put(SCOPE_PARENT, arg -> parentScope);
-                } else {
-                    var parentScope = IoC.<Scope>resolve("IoC.Scope.Current");
-                    creatingScope.put(SCOPE_PARENT, arg -> parentScope);
-                }
-                return creatingScope;
-            });
+            ROOT_SCOPE.put("IoC.Scope.Create", CREATE_SCOPE_STRATEGY);
             ROOT_SCOPE.put("IoC.Register", args -> new RegisterDependencyCommand((String) args[0],
                     (Function<Object[], Object>) args[1]));
 
-            IoC.<Command>resolve(UpdateIoCResolveDependencyStrategyCommand.class.getSimpleName(),
-                    (Function<BiFunction<String, Object[], Object>, BiFunction<String, Object[], Object>>)
-                            oldStrategy -> (String dependency, Object[] args) -> {
-                                var scope = getCurrentScope() == null ? ROOT_SCOPE : getCurrentScope();
-                                return new SimpleDependencyResolver(scope).resolve(dependency, args);
-                            }
-            ).execute();
+            updateIoCDependencyStrategy();
             isAlreadyExecuted = true;
         } finally {
             LOCK.unlock();
@@ -75,5 +70,15 @@ public class InitCommand implements Command {
 
     static void setCurrentScope(Scope scope) {
         CURRENT_SCOPE.set(scope);
+    }
+
+    private static void updateIoCDependencyStrategy() {
+        IoC.<Command>resolve(UpdateIoCResolveDependencyStrategyCommand.class.getSimpleName(),
+                (Function<BiFunction<String, Object[], Object>, BiFunction<String, Object[], Object>>)
+                        oldStrategy -> (String dependency, Object[] args) -> {
+                            var scope = getCurrentScope() == null ? ROOT_SCOPE : getCurrentScope();
+                            return new SimpleDependencyResolver(scope).resolve(dependency, args);
+                        }
+        ).execute();
     }
 }
