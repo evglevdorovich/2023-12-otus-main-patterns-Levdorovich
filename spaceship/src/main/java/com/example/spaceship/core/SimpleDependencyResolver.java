@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class SimpleDependencyResolver implements DependencyResolver {
+    private static final String EXCEPTION_HANDLER_POSTFIX = ".exception.handler";
     private final Scope scope;
 
     @Override
@@ -13,7 +14,11 @@ public class SimpleDependencyResolver implements DependencyResolver {
 
         while (true) {
             if (!currentScope.containsDependencyResolution(dependencyName)) {
-                currentScope = (Scope) currentScope.getDependency("IoC.Scope.Parent").apply(new Object[]{});
+                try {
+                    currentScope = (Scope) currentScope.getDependency("IoC.Scope.Parent").apply(new Object[]{});
+                } catch (Exception e) {
+                    IoC.resolve(SimpleDependencyResolver.class.getSimpleName() + EXCEPTION_HANDLER_POSTFIX, e);
+                }
             } else {
                 return currentScope.getDependency(dependencyName).apply(args);
             }

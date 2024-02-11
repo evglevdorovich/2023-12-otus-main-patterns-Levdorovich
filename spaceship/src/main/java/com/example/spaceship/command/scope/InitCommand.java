@@ -8,6 +8,7 @@ import com.example.spaceship.core.SimpleDependencyResolver;
 import com.example.spaceship.model.core.Scope;
 
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiFunction;
@@ -50,7 +51,7 @@ public class InitCommand implements Command {
             ROOT_SCOPE.put("IoC.Scope.Current",
                     (args -> InitCommand.getCurrentScope() == null ? InitCommand.ROOT_SCOPE : InitCommand.getCurrentScope()));
             ROOT_SCOPE.put(SCOPE_PARENT, args -> {
-                throw new IllegalStateException("root cannot have a parent");
+                throw new NoSuchElementException("root cannot have a parent");
             });
             ROOT_SCOPE.put("IoC.Scope.Create.Empty", args -> new Scope((String) args[0], new HashMap<>()));
             ROOT_SCOPE.put("IoC.Scope.Create", CREATE_SCOPE_STRATEGY);
