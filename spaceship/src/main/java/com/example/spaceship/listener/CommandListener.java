@@ -1,16 +1,15 @@
 package com.example.spaceship.listener;
 
-import com.example.spaceship.command.Command;
 import com.example.spaceship.service.CommandQueueService;
-import com.example.spaceship.service.IoCResolver;
+import com.example.spaceship.core.IoC;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class CommandListener {
+    private static final String EXCEPTION_HANDLER_POSTFIX = ".exception.handler";
     private final CommandQueueService commandQueueService;
-    private final IoCResolver<Command, Exception, Command> ioCResolver;
     private volatile boolean readyToStop = false;
 
     public void listen() {
@@ -19,16 +18,16 @@ public class CommandListener {
             try {
                 command.execute();
             } catch (Exception e) {
-                commandQueueService.add(ioCResolver.resolve(command, e));
+                commandQueueService.add(IoC.resolve(command.getClass() + EXCEPTION_HANDLER_POSTFIX, e));
             }
         }
     }
 
-    boolean isReadyToStop() {
-        return readyToStop;
-    }
-
     public void stop() {
         readyToStop = true;
+    }
+
+    boolean isReadyToStop() {
+        return readyToStop;
     }
 }
