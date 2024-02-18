@@ -10,8 +10,6 @@ import java.util.function.Function;
 public record AdapterRegisterCreatorCommand() implements Command {
     @Override
     public void execute() {
-        var currentScope = IoC.<Scope>resolve("IoC.Scope.Current");
-
         Function<Class<?>[], Object> adapterRegister = (classes) -> {
             Arrays.stream(classes)
                     .forEach(adapter -> IoC.resolve("IoC.Register", "Adapter." + adapter.getName(),

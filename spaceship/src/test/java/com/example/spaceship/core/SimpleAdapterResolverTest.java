@@ -1,23 +1,17 @@
-package com.example.spaceship.command.adapter;
+package com.example.spaceship.core;
 
 import com.example.spaceship.command.scope.ClearCurrentScopeCommand;
 import com.example.spaceship.command.scope.InitCommand;
 import com.example.spaceship.command.scope.SetCurrentScopeCommand;
-import com.example.spaceship.core.IoC;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mockStatic;
 
-class AdapterRegisterCreatorCommandTest {
+class SimpleAdapterResolverTest {
     @BeforeEach
     void init() {
         new InitCommand().execute();
@@ -33,11 +27,18 @@ class AdapterRegisterCreatorCommandTest {
     }
 
     @Test
-    void shouldRegisterAdapters() {
+    void shouldResolveObject() {
+        var simpleAdapterResolver = new SimpleAdapterResolver();
+        var interfaceName = String.class.getName();
+        var object = new Object();
+        var adapteredObject = new Object();
+
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
-            new AdapterRegisterCreatorCommand().execute();
-            ioC.verify(() -> IoC.resolve(eq("IoC.Register"), eq("Adapter.Register"), any(Function.class)));
+            ioC.when(() -> {
+                IoC.resolve("Adapter." + interfaceName + "Adapter", object);
+            }).thenReturn(adapteredObject);
+            var actualResolvedAdapteredObject = simpleAdapterResolver.resolve(interfaceName, object);
+            assertThat(actualResolvedAdapteredObject).isEqualTo(adapteredObject);
         }
     }
-
 }
