@@ -6,6 +6,8 @@ import com.example.spaceship.command.ioc.UpdateIoCResolveDependencyStrategyComma
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.core.SimpleDependencyResolver;
 import com.example.spaceship.model.core.Scope;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.NoSuchElementException;
@@ -30,7 +32,9 @@ public class InitCommand implements Command {
         }
         return creatingScope;
     };
-    static boolean isAlreadyExecuted = false;
+    @Setter
+    @Getter
+    private static boolean isAlreadyExecuted = false;
 
     @Override
     @SuppressWarnings("unchecked")

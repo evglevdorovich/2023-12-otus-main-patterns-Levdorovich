@@ -13,5 +13,4 @@ public class SpaceshipApplication {
         var context = SpringApplication.run(SpaceshipApplication.class, args);
         context.getBean(CommandListener.class).listen();
     }
-
 }

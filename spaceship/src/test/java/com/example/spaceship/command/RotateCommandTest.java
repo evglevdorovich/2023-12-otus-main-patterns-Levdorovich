@@ -17,7 +17,7 @@ class RotateCommandTest {
     private Rotatable rotatable;
 
     @Test
-    void shouldCorrectlyRotate(){
+    void shouldCorrectlyRotate() {
         var initialDirection = 3;
         var angularVelocity = 2;
         var directionsNumber = 3;
@@ -33,7 +33,7 @@ class RotateCommandTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentExceptionIfDirectionsNumberIsZero(){
+    void shouldThrowIllegalArgumentExceptionIfDirectionsNumberIsZero() {
         when(rotatable.getDirectionsNumber()).thenReturn(0);
         var rotateCommand = new RotateCommand(rotatable);
         assertThatThrownBy(rotateCommand::execute).isInstanceOf(IllegalArgumentException.class);

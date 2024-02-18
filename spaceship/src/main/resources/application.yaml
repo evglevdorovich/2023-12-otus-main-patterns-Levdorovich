@@ -13,5 +13,3 @@ queue:
 second-retry:
     enable: true
 
-fuel:
-
