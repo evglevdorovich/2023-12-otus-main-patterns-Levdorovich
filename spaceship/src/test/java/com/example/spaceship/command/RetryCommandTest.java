@@ -18,4 +18,5 @@ class RetryCommandTest {
         retryCommand.execute();
         verify(command).execute();
     }
+
 }

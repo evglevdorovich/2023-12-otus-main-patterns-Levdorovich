@@ -23,5 +23,6 @@ public class SimpleDependencyResolver implements DependencyResolver {
                 return currentScope.getDependency(dependencyName).apply(args);
             }
         }
+
     }
 }

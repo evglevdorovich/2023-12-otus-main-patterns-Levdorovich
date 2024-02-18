@@ -40,5 +40,4 @@ class ClassGraphFinderTest {
 
         assertThat(foundClasses).isEqualTo(expectedClassesToFound);
     }
-
 }

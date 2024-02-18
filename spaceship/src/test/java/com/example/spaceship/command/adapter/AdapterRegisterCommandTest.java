@@ -20,5 +20,4 @@ class AdapterRegisterCommandTest extends IoCSetUpTest {
             ioC.verify(() -> IoC.resolve("Adapter.Register", adapters));
         }
     }
-
 }

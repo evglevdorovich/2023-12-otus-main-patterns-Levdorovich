@@ -8,7 +8,6 @@ import com.example.spaceship.command.scope.InitCommand;
 import com.example.spaceship.core.Adapted;
 import com.example.spaceship.core.AdapterResolver;
 import com.example.spaceship.core.IoC;
-import com.example.spaceship.core.SimpleAdapterResolver;
 import com.example.spaceship.service.adapter.AdapterCreator;
 import com.example.spaceship.service.classes.ClassFinder;
 import jakarta.annotation.PostConstruct;

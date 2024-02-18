@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 public record AdapterRegisterCreatorCommand() implements Command {
     @Override
+    @SuppressWarnings("unchecked")
     public void execute() {
         Function<Object[], Object> adapterRegister = (classes) -> {
             Arrays.stream(classes)

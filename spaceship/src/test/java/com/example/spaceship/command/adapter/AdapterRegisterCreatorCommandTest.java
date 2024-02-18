@@ -27,5 +27,4 @@ class AdapterRegisterCreatorCommandTest extends IoCSetUpTest {
 
         verify(registerCommand).execute();
     }
-
 }

@@ -1,6 +1,5 @@
 package com.example.spaceship.service.classes;
 
-import com.example.spaceship.service.classes.ClassFinder;
 import io.github.classgraph.ClassGraph;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
