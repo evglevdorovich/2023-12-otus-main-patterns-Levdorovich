@@ -12,8 +12,8 @@ public record AdapterRegisterCreatorCommand() implements Command {
     public void execute() {
         Function<Object[], Object> adapterRegister = (classes) -> {
             Arrays.stream(classes)
-                    .map(obj -> (Class<?>) obj)
-                    .forEach(adapter -> IoC.resolve("IoC.Register", "Adapter." + adapter.getName(),
+                    .map(obj -> (Class<Object>) obj)
+                    .forEach(adapter -> IoC.<RegisterDependencyCommand>resolve("IoC.Register", "Adapter." + adapter.getName(),
                             (Function<Object[], Object>) (args) -> {
                                 try {
                                     return adapter.getConstructor(Object.class).newInstance(args[0]);
@@ -21,7 +21,7 @@ public record AdapterRegisterCreatorCommand() implements Command {
                                     throw new IllegalArgumentException("Cannot find a constructor with size = " + args.length + "for Adapter = " +
                                             adapter.getName());
                                 }
-                            }));
+                            }).execute());
             return classes;
         };
 
