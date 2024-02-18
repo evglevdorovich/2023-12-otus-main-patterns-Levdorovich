@@ -2,26 +2,28 @@ package com.example.spaceship.configuration;
 
 import com.example.spaceship.IoCAdapterInterceptor;
 import com.example.spaceship.IoCSetUpTest;
+import com.example.spaceship.command.ioc.RegisterDependencyCommand;
 import com.example.spaceship.command.scope.InitCommand;
 import com.example.spaceship.core.Adapted;
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.core.Scope;
 import com.example.spaceship.service.adapter.AdapterCreator;
 import com.example.spaceship.service.classes.ClassFinder;
-import io.github.classgraph.ClassGraph;
-import net.bytebuddy.ByteBuddy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,9 +55,21 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
     void shouldCreateAdapters() {
         List<Class<?>> classesToFind = List.of(Integer.class, String.class);
         var classesMock = mock(List.class);
+        var classes = new Object[]{};
+        var mockCommand = mock(RegisterDependencyCommand.class);
 
         when(classFinder.search("../", Adapted.class)).thenReturn(classesToFind);
         when(adapterCreator.createAdapters(classesToFind, IoCAdapterInterceptor.class, "Adapter")).thenReturn(classesMock);
-        appConfiguration.configure();
+        when(classesMock.toArray()).thenReturn(classes);
+
+        try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
+            ioC.when(() -> IoC.<RegisterDependencyCommand>resolve(eq("IoC.Register"), eq("Adapter.Register"), any(Function.class)))
+                    .thenReturn(mockCommand);
+
+            appConfiguration.configure();
+
+            ioC.verify(() -> IoC.resolve("Adapter.Register", classes));
+        }
+
     }
 }

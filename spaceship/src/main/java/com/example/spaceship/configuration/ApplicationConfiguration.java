@@ -1,6 +1,7 @@
 package com.example.spaceship.configuration;
 
 import com.example.spaceship.IoCAdapterInterceptor;
+import com.example.spaceship.command.adapter.AdapterRegisterCommand;
 import com.example.spaceship.command.adapter.AdapterRegisterCreatorCommand;
 import com.example.spaceship.command.scope.InitCommand;
 import com.example.spaceship.core.Adapted;
@@ -21,6 +22,7 @@ public class ApplicationConfiguration {
         new InitCommand().execute();
         new AdapterRegisterCreatorCommand().execute();
         var classes = classFinder.search("../", Adapted.class);
-        var adapters = adapterCreator.createAdapters(classes, IoCAdapterInterceptor.class, "Adapter");
+        var adapters = adapterCreator.createAdapters(classes, IoCAdapterInterceptor.class, "Adapter").toArray();
+        new AdapterRegisterCommand(adapters).execute();
     }
 }

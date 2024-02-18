@@ -10,8 +10,9 @@ import java.util.function.Function;
 public record AdapterRegisterCreatorCommand() implements Command {
     @Override
     public void execute() {
-        Function<Class<?>[], Object> adapterRegister = (classes) -> {
+        Function<Object[], Object> adapterRegister = (classes) -> {
             Arrays.stream(classes)
+                    .map(obj -> (Class<?>) obj)
                     .forEach(adapter -> IoC.resolve("IoC.Register", "Adapter." + adapter.getName(),
                             (Function<Object[], Object>) (args) -> {
                                 try {

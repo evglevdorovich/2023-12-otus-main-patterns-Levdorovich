@@ -5,15 +5,13 @@ import com.example.spaceship.core.IoC;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
-import java.util.List;
-
 import static org.mockito.Mockito.mockStatic;
 
 class AdapterRegisterCommandTest extends IoCSetUpTest {
 
     @Test
     void shouldRegisterAdapters() {
-        List<Class<?>> adapters = List.of(Integer.class, Long.class);
+        Class<?>[] adapters = new Class[]{Integer.class, Long.class};
 
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
 
