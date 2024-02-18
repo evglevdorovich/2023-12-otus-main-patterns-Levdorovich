@@ -12,12 +12,15 @@ import io.github.classgraph.ClassGraph;
 import net.bytebuddy.ByteBuddy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,30 +31,12 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
     @Mock
     private AdapterCreator adapterCreator;
 
-    @Test
-    void shouldReturnByteBuddy() {
-        ApplicationConfiguration appConfiguration = new ApplicationConfiguration();
-        var expectedResult = new ByteBuddy();
-
-        var actualResult = appConfiguration.byteBuddy();
-
-        assertThat(actualResult).isEqualTo(expectedResult);
-    }
-
-    @Test
-    void shouldReturnClassGraphWithAllInfoEnabled() {
-        ApplicationConfiguration appConfiguration = new ApplicationConfiguration();
-
-        var actualResult = appConfiguration.classGraph();
-
-        assertThat(actualResult).isInstanceOf(ClassGraph.class);
-    }
+    @InjectMocks
+    private ApplicationConfiguration appConfiguration;
 
     @Test
     void shouldCorrectlyInitialize() {
-        ApplicationConfiguration appConfiguration = new ApplicationConfiguration();
-
-        appConfiguration.configure(classFinder, adapterCreator);
+        appConfiguration.configure();
 
         assertThat(InitCommand.isAlreadyExecuted()).isTrue();
         var expectedCurrentScopeDependencyResolutionNames = new String[]{"IoC.Scope.Parent", "Adapter.Register"};
@@ -66,12 +51,11 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
 
     @Test
     void shouldCreateAdapters() {
-        ApplicationConfiguration appConfiguration = new ApplicationConfiguration();
         List<Class<?>> classesToFind = List.of(Integer.class, String.class);
+        var classesMock = mock(List.class);
 
         when(classFinder.search("../", Adapted.class)).thenReturn(classesToFind);
-        appConfiguration.configure(classFinder, adapterCreator);
-
-        verify(adapterCreator).createAdapters(classesToFind, IoCAdapterInterceptor.class, "Adapter");
+        when(adapterCreator.createAdapters(classesToFind, IoCAdapterInterceptor.class, "Adapter")).thenReturn(classesMock);
+        appConfiguration.configure();
     }
 }
