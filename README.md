@@ -3,3 +3,4 @@
 3. 3d Homework is localized in spaceship directory
 4. 4th Homework is localized in spaceship directory
 5. 5th Homework is localized in spaceship directory
+6. 6th Homework is localized in spaceship directory
