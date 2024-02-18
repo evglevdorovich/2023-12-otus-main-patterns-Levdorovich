@@ -1,8 +1,8 @@
 package com.example.spaceship.command.adapter;
 
 import com.example.spaceship.command.Command;
+import com.example.spaceship.command.ioc.RegisterDependencyCommand;
 import com.example.spaceship.core.IoC;
-import com.example.spaceship.model.core.Scope;
 
 import java.util.Arrays;
 import java.util.function.Function;
@@ -24,6 +24,6 @@ public record AdapterRegisterCreatorCommand() implements Command {
             return classes;
         };
 
-        IoC.resolve("IoC.Register", "Adapter.Register", adapterRegister);
+        IoC.<RegisterDependencyCommand>resolve("IoC.Register", "Adapter.Register", adapterRegister).execute();
     }
 }

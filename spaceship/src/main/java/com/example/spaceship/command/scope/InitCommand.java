@@ -63,6 +63,7 @@ public class InitCommand implements Command {
                     (Function<Object[], Object>) args[1]));
 
             updateIoCDependencyStrategy();
+
             isAlreadyExecuted = true;
         } finally {
             LOCK.unlock();

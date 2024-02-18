@@ -1,30 +1,13 @@
 package com.example.spaceship.core;
 
-import com.example.spaceship.command.scope.ClearCurrentScopeCommand;
-import com.example.spaceship.command.scope.InitCommand;
-import com.example.spaceship.command.scope.SetCurrentScopeCommand;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.spaceship.IoCSetUpTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mockStatic;
 
-class SimpleAdapterResolverTest {
-    @BeforeEach
-    void init() {
-        new InitCommand().execute();
-        var scope = IoC.resolve("IoC.Scope.Create", "test");
-        IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", scope).execute();
-    }
-
-    @AfterEach
-    void cleanUp() {
-        InitCommand.setAlreadyExecuted(false);
-        IoC.<ClearCurrentScopeCommand>resolve("IoC.Scope.Current.Clear").execute();
-        IoC.clear();
-    }
+class SimpleAdapterResolverTest extends IoCSetUpTest {
 
     @Test
     void shouldResolveObject() {

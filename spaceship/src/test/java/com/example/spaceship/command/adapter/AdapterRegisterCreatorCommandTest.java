@@ -1,43 +1,31 @@
 package com.example.spaceship.command.adapter;
 
-import com.example.spaceship.command.scope.ClearCurrentScopeCommand;
-import com.example.spaceship.command.scope.InitCommand;
-import com.example.spaceship.command.scope.SetCurrentScopeCommand;
+import com.example.spaceship.IoCSetUpTest;
+import com.example.spaceship.command.ioc.RegisterDependencyCommand;
 import com.example.spaceship.core.IoC;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
 
-class AdapterRegisterCreatorCommandTest {
-    @BeforeEach
-    void init() {
-        new InitCommand().execute();
-        var scope = IoC.resolve("IoC.Scope.Create", "test");
-        IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", scope).execute();
-    }
-
-    @AfterEach
-    void cleanUp() {
-        InitCommand.setAlreadyExecuted(false);
-        IoC.<ClearCurrentScopeCommand>resolve("IoC.Scope.Current.Clear").execute();
-        IoC.clear();
-    }
+class AdapterRegisterCreatorCommandTest extends IoCSetUpTest {
 
     @Test
-    void shouldRegisterAdapters() {
+    void shouldRegisterAdaptersCreator() {
+        var registerCommand = mock(RegisterDependencyCommand.class);
+
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
+            ioC.when(() -> IoC.resolve(eq("IoC.Register"), eq("Adapter.Register"), any(Function.class))).thenReturn(registerCommand);
             new AdapterRegisterCreatorCommand().execute();
-            ioC.verify(() -> IoC.resolve(eq("IoC.Register"), eq("Adapter.Register"), any(Function.class)));
         }
+
+        verify(registerCommand).execute();
     }
 
 }
