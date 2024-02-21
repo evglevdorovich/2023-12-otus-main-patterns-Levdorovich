@@ -61,4 +61,8 @@ public class Spaceship implements Movable, Rotatable, FuelConsumer, VelocityAdju
     public boolean isEnoughToConsume() {
         return fuel.getAmount() >= fuelConsumption;
     }
+    //TestMethod
+    public void finish() {
+        System.out.println("do finishing");
+    }
 }

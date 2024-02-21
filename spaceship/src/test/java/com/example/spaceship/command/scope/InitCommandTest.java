@@ -16,7 +16,7 @@ class InitCommandTest {
 
     @AfterEach
     void cleanUp() {
-        InitCommand.isAlreadyExecuted = false;
+        InitCommand.setAlreadyExecuted(false);
         InitCommand.setCurrentScope(null);
         IoC.clear();
     }

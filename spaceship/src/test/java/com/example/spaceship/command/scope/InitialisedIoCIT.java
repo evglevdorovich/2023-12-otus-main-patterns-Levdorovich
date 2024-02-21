@@ -26,7 +26,7 @@ class InitialisedIoCIT {
     @AfterEach
     void clean() {
         InitCommand.setCurrentScope(null);
-        InitCommand.isAlreadyExecuted = false;
+        InitCommand.setAlreadyExecuted(false);
         IoC.clear();
     }
 
