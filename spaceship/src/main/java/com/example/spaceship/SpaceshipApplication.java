@@ -1,6 +1,6 @@
 package com.example.spaceship;
 
-import com.example.spaceship.listener.CommandListener;
+import com.example.spaceship.queue.SystemThread;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +11,6 @@ public class SpaceshipApplication {
 
     public static void main(String[] args) {
         var context = SpringApplication.run(SpaceshipApplication.class, args);
-        context.getBean(CommandListener.class).listen();
+        context.getBean(SystemThread.class).start();
     }
 }
