@@ -35,12 +35,12 @@ class QueueSystemThreadTest {
     @Test
     void shouldStopStartedThread() {
         var destroyEvent = new DestroyEvent();
-        var testee = new QueueSystemThread(commands, destroyEvent::finish);
+        var queueSystemThread = new QueueSystemThread(commands, destroyEvent::finish);
 
-        testee.start();
+        queueSystemThread.start();
         // make sure it's executed at least once
         when(commands.poll()).thenAnswer((invocation) -> {
-            testee.stop();
+            queueSystemThread.stop();
             return command;
         });
 
@@ -52,10 +52,10 @@ class QueueSystemThreadTest {
     @Test
     void shouldUpdateBehaviour() {
         var destroyEvent = new DestroyEvent();
-        var testee = new QueueSystemThread(commands);
+        var queueSystemThread = new QueueSystemThread(commands);
 
-        testee.updateBehaviour(destroyEvent::finish);
-        testee.start();
+        queueSystemThread.updateBehaviour(destroyEvent::finish);
+        queueSystemThread.start();
 
         Awaitility.await()
                 .atMost(Duration.ofSeconds(5))

@@ -3,9 +3,7 @@ package com.example.spaceship.command.queue;
 import com.example.spaceship.command.Command;
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.queue.QueueSystemThread;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class SoftStopQueueSystemThreadCommand implements Command {
     private static final String EXCEPTION_HANDLER_POSTFIX = ".exception.handler";
     private final QueueSystemThread queueSystemThread;

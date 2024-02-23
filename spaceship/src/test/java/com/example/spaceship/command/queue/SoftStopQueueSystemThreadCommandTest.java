@@ -34,13 +34,10 @@ class SoftStopQueueSystemThreadCommandTest extends IoCSetUpTest {
         var queue = new ArrayBlockingQueue<Command>(CAPACITY);
         doNothing().when(command).execute();
 
-        for (int i = 0; i < CAPACITY - 1; i++) {
-            queue.add(new DoNothingCommand());
-        }
-        queue.add(command);
+        populateQueueWithCommands(queue);
 
         var systemThread = new QueueSystemThread(queue, destroyEvent::finish);
-        systemThread.setOnInit(getIoCInitialisationWithStoppingLogic());
+        systemThread.setOnInit(getIoCInitialisationWithHardStoppingLogic());
 
         systemThread.start();
 
@@ -54,7 +51,14 @@ class SoftStopQueueSystemThreadCommandTest extends IoCSetUpTest {
         verify(command).execute();
     }
 
-    private Runnable getIoCInitialisationWithStoppingLogic() {
+    private void populateQueueWithCommands(ArrayBlockingQueue<Command> queue) {
+        for (int i = 0; i < CAPACITY - 1; i++) {
+            queue.add(new DoNothingCommand());
+        }
+        queue.add(command);
+    }
+
+    private Runnable getIoCInitialisationWithHardStoppingLogic() {
         return () -> {
             var scope = IoC.<Scope>resolve("IoC.Scope.Create", "testSystemThread1");
             IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", scope).execute();

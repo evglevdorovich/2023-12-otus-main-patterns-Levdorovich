@@ -32,14 +32,14 @@ class QueueSystemThreadIT extends IoCSetUpTest {
     @Test
     void shouldHandleException() {
         var destroyEvent = new DestroyEvent();
-        var testee = new QueueSystemThread(commands, destroyEvent::finish);
+        var queueSystemThread = new QueueSystemThread(commands, destroyEvent::finish);
 
-        testee.setOnInit(getIoCInitialisationWithStoppingLogic(testee));
+        queueSystemThread.setOnInit(getIoCInitialisationWithStoppingLogic(queueSystemThread));
 
         when(commands.poll()).thenReturn(command);
         doThrow(RuntimeException.class).when(command).execute();
 
-        testee.start();
+        queueSystemThread.start();
 
         Awaitility.await()
                 .atMost(Duration.ofSeconds(5))
@@ -47,13 +47,13 @@ class QueueSystemThreadIT extends IoCSetUpTest {
     }
 
     //Setting test scope inside Thread in System thread
-    private Runnable getIoCInitialisationWithStoppingLogic(QueueSystemThread testee) {
+    private Runnable getIoCInitialisationWithStoppingLogic(QueueSystemThread queueSystemThread) {
         return () -> {
             var scope = IoC.<Scope>resolve("IoC.Scope.Create", "testSystemThread1");
             IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", scope).execute();
             IoC.<RegisterDependencyCommand>resolve("IoC.Register", command.getClass() + EXCEPTION_HANDLER_POSTFIX,
                     (Function<Object[], Object>) exc -> {
-                        testee.stop();
+                        queueSystemThread.stop();
                         return command;
                     }).execute();
         };
