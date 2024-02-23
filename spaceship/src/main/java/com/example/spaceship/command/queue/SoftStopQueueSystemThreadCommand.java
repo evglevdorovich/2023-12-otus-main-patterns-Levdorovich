@@ -11,6 +11,7 @@ public class SoftStopQueueSystemThreadCommand implements Command {
 
     public SoftStopQueueSystemThreadCommand(QueueSystemThread queueSystemThread) {
         this.queueSystemThread = queueSystemThread;
+
         softStopBehaviour = () -> {
             var commands = queueSystemThread.getCommands();
             IoC.<HardStopQueueSystemThreadCommand>resolve("SystemThread.HardStop", queueSystemThread).execute();
