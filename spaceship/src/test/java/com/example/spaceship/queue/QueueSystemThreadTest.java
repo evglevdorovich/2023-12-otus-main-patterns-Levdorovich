@@ -16,26 +16,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SystemThreadTest {
+class QueueSystemThreadTest {
     @Mock
     private Command command;
     @Mock
     private Queue<Command> commands;
     @InjectMocks
-    private SystemThread systemThread;
+    private QueueSystemThread queueSystemThread;
 
     @Test
     void shouldMadeReadyForStop() {
-        systemThread.stop();
+        queueSystemThread.stop();
 
-        var actualReadyToStop = systemThread.isReadyToStop();
+        var actualReadyToStop = queueSystemThread.isReadyToStop();
         assertThat(actualReadyToStop).isTrue();
     }
 
     @Test
     void shouldStopStartedThread() {
         var destroyEvent = new DestroyEvent();
-        var testee = new SystemThread(commands, destroyEvent::finish);
+        var testee = new QueueSystemThread(commands, destroyEvent::finish);
 
         testee.start();
         // make sure it's executed at least once
@@ -43,6 +43,19 @@ class SystemThreadTest {
             testee.stop();
             return command;
         });
+
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(5))
+                .untilAsserted(() -> assertThat(destroyEvent.isFinished()).isTrue());
+    }
+
+    @Test
+    void shouldUpdateBehaviour() {
+        var destroyEvent = new DestroyEvent();
+        var testee = new QueueSystemThread(commands);
+
+        testee.updateBehaviour(destroyEvent::finish);
+        testee.start();
 
         Awaitility.await()
                 .atMost(Duration.ofSeconds(5))

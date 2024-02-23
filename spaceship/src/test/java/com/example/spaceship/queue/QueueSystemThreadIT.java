@@ -22,7 +22,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SystemThreadIT extends IoCSetUpTest {
+class QueueSystemThreadIT extends IoCSetUpTest {
     private static final String EXCEPTION_HANDLER_POSTFIX = ".exception.handler";
     @Mock
     private Command command;
@@ -32,7 +32,7 @@ class SystemThreadIT extends IoCSetUpTest {
     @Test
     void shouldHandleException() {
         var destroyEvent = new DestroyEvent();
-        var testee = new SystemThread(commands, destroyEvent::finish);
+        var testee = new QueueSystemThread(commands, destroyEvent::finish);
 
         testee.setOnInit(getIoCInitialisationWithStoppingLogic(testee));
 
@@ -47,7 +47,7 @@ class SystemThreadIT extends IoCSetUpTest {
     }
 
     //Setting test scope inside Thread in System thread
-    private Runnable getIoCInitialisationWithStoppingLogic(SystemThread testee) {
+    private Runnable getIoCInitialisationWithStoppingLogic(QueueSystemThread testee) {
         return () -> {
             var scope = IoC.<Scope>resolve("IoC.Scope.Create", "testSystemThread1");
             IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", scope).execute();

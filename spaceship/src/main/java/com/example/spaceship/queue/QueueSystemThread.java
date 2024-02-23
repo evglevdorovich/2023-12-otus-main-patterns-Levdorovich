@@ -13,8 +13,9 @@ import java.util.Queue;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SystemThread {
+public class QueueSystemThread {
     private static final String EXCEPTION_HANDLER_POSTFIX = ".exception.handler";
+    @Getter
     private Queue<Command> commands;
     @Getter
     private boolean readyToStop = false;
@@ -39,7 +40,7 @@ public class SystemThread {
     };
 
     @Autowired
-    public SystemThread(Queue<Command> commands) {
+    public QueueSystemThread(Queue<Command> commands) {
         this.commands = commands;
         thread = new Thread(() -> {
             onInit.run();
@@ -50,15 +51,20 @@ public class SystemThread {
         });
     }
 
-    public SystemThread(Queue<Command> commands, Runnable onDestroy) {
+    public QueueSystemThread(Queue<Command> commands, Runnable onDestroy) {
         this(commands);
         this.onDestroy = onDestroy;
     }
+
     public void start() {
         thread.start();
     }
 
     public void stop() {
         readyToStop = true;
+    }
+
+    public void updateBehaviour(Runnable behaviour) {
+        this.behaviour = behaviour;
     }
 }
