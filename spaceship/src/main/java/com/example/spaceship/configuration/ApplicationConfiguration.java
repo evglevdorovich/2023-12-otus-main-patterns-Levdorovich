@@ -70,5 +70,8 @@ public class ApplicationConfiguration {
 
         IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "Queue.Register", (Function<Object[], Object>)
                 args -> new RegisterCommand(gameQueueStorageLocal, (String) args[0], (Command) args[1])).execute();
+
+        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "Queue", (Function<Object[], Object>)
+                args -> gameQueueStorageLocal.get((String) args[0])).execute();
     }
 }
