@@ -7,10 +7,11 @@ import com.example.spaceship.model.PlayerActionRequest;
 public record InterpretCommand(PlayerActionRequest playerActionRequest) implements Command {
     @Override
     public void execute() {
+        var operationRequest = playerActionRequest.getOperationRequest();
         var gameObject = IoC.resolve("GameObject", playerActionRequest.getGameId(), playerActionRequest.getPlayerId());
         IoC.resolve("GameObject.Commands.Validate", playerActionRequest.getGameId(), playerActionRequest.getPlayerId(),
-                playerActionRequest.getOperationId());
-        var commandToPerform = IoC.<Command>resolve(playerActionRequest.getOperationId(), gameObject, playerActionRequest.getArgs());
+                operationRequest.getId());
+        var commandToPerform = IoC.<Command>resolve(operationRequest.getId(), gameObject, operationRequest.getArgs());
         IoC.<RegisterCommand>resolve("Queue.Register", playerActionRequest.getGameId(), commandToPerform).execute();
     }
 

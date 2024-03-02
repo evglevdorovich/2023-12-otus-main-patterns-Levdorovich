@@ -8,6 +8,7 @@ import com.example.spaceship.command.scope.ClearCurrentScopeCommand;
 import com.example.spaceship.command.scope.InitCommand;
 import com.example.spaceship.command.scope.SetCurrentScopeCommand;
 import com.example.spaceship.model.MovableFinishable;
+import com.example.spaceship.model.OperationRequest;
 import com.example.spaceship.model.PlayerActionRequest;
 import com.example.spaceship.model.Spaceship;
 import com.example.spaceship.model.Vector;
@@ -95,8 +96,7 @@ class IoCIT {
         var spaceShip = new Spaceship();
         spaceShip.setVelocity(new Vector(List.of(1, 2)));
         registerSetVelocity();
-
-        var playerActionRequest = new PlayerActionRequest(gameId, playerId, operationId, arguments);
+        var playerActionRequest = new PlayerActionRequest(gameId, playerId, new OperationRequest(operationId, arguments));
 
         registerGameObject(gameId, playerId, spaceShip);
         registerCommands(gameId, playerId, operationId);

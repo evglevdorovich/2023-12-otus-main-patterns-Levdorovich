@@ -3,6 +3,7 @@ package com.example.spaceship.command;
 import com.example.spaceship.IoCSetUpTest;
 import com.example.spaceship.command.queue.RegisterCommand;
 import com.example.spaceship.core.IoC;
+import com.example.spaceship.model.OperationRequest;
 import com.example.spaceship.model.PlayerActionRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -19,7 +20,8 @@ class InterpretCommandTest extends IoCSetUpTest {
     @Test
     void shouldPutCommandInQueue() {
 
-        var playerActionRequest = new PlayerActionRequest(GAME_ID, PLAYER_ID, OPERATION_ID, new Object[]{});
+        var operationRequest = new OperationRequest(OPERATION_ID, new Object[]{});
+        var playerActionRequest = new PlayerActionRequest(GAME_ID, PLAYER_ID, operationRequest);
         var gameObject = new Object();
         var command = createCommand();
         var putInQueueCommand = Mockito.mock(RegisterCommand.class);
@@ -27,14 +29,15 @@ class InterpretCommandTest extends IoCSetUpTest {
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
             ioC.when(() -> IoC.resolve("GameObject", playerActionRequest.getGameId(), playerActionRequest.getPlayerId()))
                     .thenReturn(gameObject);
-            ioC.when(() -> IoC.resolve(playerActionRequest.getOperationId(), gameObject, playerActionRequest.getArgs())).thenReturn(command);
+            ioC.when(() -> IoC.resolve(operationRequest.getId(), gameObject, operationRequest.getArgs()))
+                    .thenReturn(command);
             ioC.when(() -> IoC.resolve("Queue.Register", playerActionRequest.getGameId(), command))
                     .thenReturn(putInQueueCommand);
 
             new InterpretCommand(playerActionRequest).execute();
 
             ioC.verify(() -> IoC.resolve("GameObject.Commands.Validate", playerActionRequest.getGameId(),
-                    playerActionRequest.getPlayerId(), playerActionRequest.getOperationId()));
+                    playerActionRequest.getPlayerId(), operationRequest.getId()));
         }
         verify(putInQueueCommand).execute();
     }

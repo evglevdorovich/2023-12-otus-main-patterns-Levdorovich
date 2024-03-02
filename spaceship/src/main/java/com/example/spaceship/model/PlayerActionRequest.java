@@ -6,6 +6,5 @@ import lombok.Value;
 public class PlayerActionRequest {
     String gameId;
     String playerId;
-    String operationId;
-    Object[] args;
+    OperationRequest operationRequest;
 }
