@@ -7,5 +7,5 @@ public class PlayerActionRequest {
     String gameId;
     String playerId;
     String operationId;
-    String[] args;
+    Object[] args;
 }
