@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GameQueueStorageLocalTest {
     private static final String GAME_ID = "gameId";
 
-
     @Test
     void shouldGetQueue() {
         var expectedQueue = new ArrayBlockingQueue<Command>(100);

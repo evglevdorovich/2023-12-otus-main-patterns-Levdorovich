@@ -50,8 +50,8 @@ class GamePlayerCommandStorageLocalTest {
         var gamePlayerCommandStorage = new GamePlayerCommandStorageLocal(playerCommands);
         gamePlayerCommandStorage.addCommands(GAME_ID, PLAYER_ID, Set.of(COMMAND_NAME));
 
-        var containsCommand = playerCommands.get(GAME_ID).get(PLAYER_ID).contains(COMMAND_NAME);
+        var commands = playerCommands.get(GAME_ID).get(PLAYER_ID);
 
-        assertThat(containsCommand).isTrue();
+        assertThat(commands).containsExactly(COMMAND_NAME);
     }
 }
