@@ -34,9 +34,6 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
     private ClassFinder classFinder;
     @Mock
     private AdapterCreator adapterCreator;
-    @Mock
-    private AdapterResolver adapterResolver;
-
     @InjectMocks
     private ApplicationConfiguration appConfiguration;
 
