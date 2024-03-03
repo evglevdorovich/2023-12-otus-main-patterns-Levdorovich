@@ -33,7 +33,6 @@ public class ApplicationConfiguration {
     private final AdapterResolver adapterResolver;
 
     @PostConstruct
-    @SuppressWarnings("unchecked")
     public void configure() {
         new InitCommand().execute();
         new AdapterRegisterCreatorCommand().execute();
@@ -47,15 +46,23 @@ public class ApplicationConfiguration {
         var playerCommands = new GamePlayerCommandStorageLocal(new HashMap<>());
         var gameQueueStorageLocal = new GameQueueStorageLocal(new ConcurrentHashMap<>());
 
-        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "GameObject", (Function<Object[], Object>)
-                args -> gamePlayerStorageLocal.get((String) args[0], (String) args[1])).execute();
+        prepareGameObjectStorage(gamePlayerStorageLocal);
 
-        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "GameObject.Register", (Function<Object[], Object>)
-                args -> {
-                    gamePlayerStorageLocal.add((String) args[0], (String) args[1], args[2]);
-                    return null;
-                }).execute();
+        prepareCommandsStorage(playerCommands);
 
+        prepareQueueStorage(gameQueueStorageLocal);
+    }
+
+    private static void prepareQueueStorage(GameQueueStorageLocal gameQueueStorageLocal) {
+        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "Queue.Register", (Function<Object[], Object>)
+                args -> new RegisterCommand(gameQueueStorageLocal, (String) args[0], (Command) args[1])).execute();
+
+        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "Queue", (Function<Object[], Object>)
+                args -> gameQueueStorageLocal.get((String) args[0])).execute();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void prepareCommandsStorage(GamePlayerCommandStorageLocal playerCommands) {
         IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "GameObject.Commands.Register", (Function<Object[], Object>)
                 args -> {
                     playerCommands.addCommands((String) args[0], (String) args[1], (Collection<String>) args[2]);
@@ -67,11 +74,16 @@ public class ApplicationConfiguration {
                     playerCommands.validateCommand((String) args[0], (String) args[1], (String) args[2]);
                     return null;
                 }).execute();
+    }
 
-        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "Queue.Register", (Function<Object[], Object>)
-                args -> new RegisterCommand(gameQueueStorageLocal, (String) args[0], (Command) args[1])).execute();
+    private static void prepareGameObjectStorage(GamePlayerStorageLocal gamePlayerStorageLocal) {
+        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "GameObject", (Function<Object[], Object>)
+                args -> gamePlayerStorageLocal.get((String) args[0], (String) args[1])).execute();
 
-        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "Queue", (Function<Object[], Object>)
-                args -> gameQueueStorageLocal.get((String) args[0])).execute();
+        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "GameObject.Register", (Function<Object[], Object>)
+                args -> {
+                    gamePlayerStorageLocal.add((String) args[0], (String) args[1], args[2]);
+                    return null;
+                }).execute();
     }
 }

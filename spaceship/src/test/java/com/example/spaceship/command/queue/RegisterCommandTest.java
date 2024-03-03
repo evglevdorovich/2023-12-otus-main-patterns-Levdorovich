@@ -8,11 +8,6 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.verify;
 
 class RegisterCommandTest {
-    private static Command createCommand() {
-        return () -> {
-
-        };
-    }
 
     @Test
     void shouldRegisterCommand() {
@@ -25,4 +20,9 @@ class RegisterCommandTest {
         verify(queueStorage).register(gameId, command);
     }
 
+    private static Command createCommand() {
+        return () -> {
+
+        };
+    }
 }

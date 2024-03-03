@@ -3,10 +3,10 @@ package com.example.spaceship.controller;
 import com.example.spaceship.command.Command;
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.OperationRequest;
-import com.example.spaceship.model.PlayerActionRequest;
 import com.example.spaceship.model.Vector;
 import com.example.spaceship.service.SpaceshipService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +29,10 @@ public class SpaceshipController {
     }
 
     @PatchMapping("/game/{gameId}/player/{playerId}/operation")
-    public void operate(@PathVariable String gameId, @PathVariable String playerId,
-                        @RequestBody OperationRequest operationRequest) {
-        IoC.<Command>resolve("Commands.Interpret", new PlayerActionRequest(gameId, playerId, operationRequest)).execute();
+    public ResponseEntity<String> operate(@PathVariable String gameId, @PathVariable String playerId,
+                                          @RequestBody OperationRequest operationRequest) {
+        var playerActionRequest = IoC.resolve("PlayerActionRequest", gameId, playerId, operationRequest);
+        IoC.<Command>resolve("Commands.Interpret", playerActionRequest).execute();
+        return ResponseEntity.noContent().build();
     }
 }

@@ -55,10 +55,13 @@ class SpaceshipControllerTest {
         var gameId = "gameId";
         var playerId = "playerId";
         var operationRequest = new OperationRequest("operationId", new Object[]{});
+        var playerActionRequest = new PlayerActionRequest(gameId, playerId, operationRequest);
         var command = Mockito.mock(Command.class);
 
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
-            ioC.when(() -> IoC.<Command>resolve("Commands.Interpret", new PlayerActionRequest(gameId, playerId, operationRequest)))
+            ioC.when(() -> IoC.resolve("PlayerActionRequest", gameId, playerId, operationRequest))
+                    .thenReturn(playerActionRequest);
+            ioC.when(() -> IoC.<Command>resolve("Commands.Interpret", playerActionRequest))
                             .thenReturn(command);
             spaceshipController.operate(gameId, playerId, operationRequest);
         }
