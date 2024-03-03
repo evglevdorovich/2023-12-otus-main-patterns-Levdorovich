@@ -5,7 +5,6 @@ import com.example.spaceship.IoCSetUpTest;
 import com.example.spaceship.command.ioc.RegisterDependencyCommand;
 import com.example.spaceship.command.scope.InitCommand;
 import com.example.spaceship.core.Adapted;
-import com.example.spaceship.core.AdapterResolver;
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.core.Scope;
 import com.example.spaceship.service.adapter.AdapterCreator;
@@ -22,9 +21,11 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,9 +35,6 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
     private ClassFinder classFinder;
     @Mock
     private AdapterCreator adapterCreator;
-    @Mock
-    private AdapterResolver adapterResolver;
-
     @InjectMocks
     private ApplicationConfiguration appConfiguration;
 
@@ -45,7 +43,8 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
         appConfiguration.configure();
 
         assertThat(InitCommand.isAlreadyExecuted()).isTrue();
-        var expectedCurrentScopeDependencyResolutionNames = new String[]{"IoC.Scope.Parent", "Adapter.Register"};
+        var expectedCurrentScopeDependencyResolutionNames = new String[]{"IoC.Scope.Parent", "Adapter.Register", "GameObject",
+                "GameObject.Commands.Register", "GameObject.Commands.Validate", "Queue.Register", "Queue"};
         var expectedRootScopeDependencyResolutionNames = new String[]{"IoC.Scope.Current.Set", "IoC.Scope.Current.Clear", "IoC.Scope.Current",
                 "IoC.Scope.Create.Empty", "IoC.Scope.Create", "IoC.Register", "IoC.Scope.Parent"};
 
@@ -56,26 +55,21 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
     }
 
     @Test
-    void shouldCreateAdapters() {
+    void shouldExecuteRegistrations() {
         List<Class<?>> classesToFind = List.of(Integer.class, String.class);
         var classesMock = mock(List.class);
         var classes = new Object[]{};
-        var registerMockCommand = mock(RegisterDependencyCommand.class);
-        var adapterRegisterMockCommand = mock(RegisterDependencyCommand.class);
+        var registerDependencyCommand = mock(RegisterDependencyCommand.class);
 
         when(classFinder.search("../", Adapted.class)).thenReturn(classesToFind);
         when(adapterCreator.createAdapters(classesToFind, IoCAdapterInterceptor.class, "Adapter")).thenReturn(classesMock);
         when(classesMock.toArray()).thenReturn(classes);
 
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
-            ioC.when(() -> IoC.<RegisterDependencyCommand>resolve(eq("IoC.Register"), eq("Adapter.Register"), any(Function.class)))
-                    .thenReturn(registerMockCommand);
-            ioC.when(() -> IoC.resolve(eq("IoC.Register"), eq("Adapter"), any(Function.class)))
-                    .thenReturn(adapterRegisterMockCommand);
-
+            ioC.when(() -> IoC.<RegisterDependencyCommand>resolve(eq("IoC.Register"), anyString(), any(Function.class)))
+                    .thenReturn(registerDependencyCommand);
             appConfiguration.configure();
         }
-        verify(adapterRegisterMockCommand).execute();
-        verify(registerMockCommand).execute();
+        verify(registerDependencyCommand, times(8)).execute();
     }
 }
