@@ -7,7 +7,6 @@ import com.example.spaceship.model.Vector;
 import com.example.spaceship.service.SpaceshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +27,7 @@ public class SpaceshipController {
         return spaceshipService.rotate(id);
     }
 
-    @PatchMapping("/game/{gameId}/player/{playerId}/operation")
+    @PostMapping("/game/{gameId}/player/{playerId}/operation")
     public ResponseEntity<String> operate(@PathVariable String gameId, @PathVariable String playerId,
                                           @RequestBody OperationRequest operationRequest) {
         var playerActionRequest = IoC.resolve("PlayerActionRequest", gameId, playerId, operationRequest);
