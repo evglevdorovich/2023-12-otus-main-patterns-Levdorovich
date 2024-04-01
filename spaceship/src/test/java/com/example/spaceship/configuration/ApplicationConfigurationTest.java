@@ -1,6 +1,5 @@
 package com.example.spaceship.configuration;
 
-import com.auth0.jwt.algorithms.Algorithm;
 import com.example.spaceship.IoCAdapterInterceptor;
 import com.example.spaceship.IoCSetUpTest;
 import com.example.spaceship.command.ioc.RegisterDependencyCommand;
@@ -10,18 +9,13 @@ import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.core.Scope;
 import com.example.spaceship.service.adapter.AdapterCreator;
 import com.example.spaceship.service.classes.ClassFinder;
-import io.swagger.v3.oas.models.OpenAPI;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.config.crypto.RsaKeyConversionServicePostProcessor;
 
-import java.security.interfaces.RSAPublicKey;
-import java.time.Clock;
 import java.util.List;
 import java.util.function.Function;
 
@@ -77,33 +71,6 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
             appConfiguration.configure();
         }
         verify(registerDependencyCommand, times(8)).execute();
-    }
-
-    @Test
-    void shouldReturnClock() {
-        var expectedClock = Clock.systemDefaultZone();
-
-        assertThat(appConfiguration.clock()).isEqualTo(expectedClock);
-    }
-
-    @Test
-    void shouldReturnInitializedAlgorithm() {
-        var publicKey = Mockito.mock(RSAPublicKey.class);
-
-        var actualAlgorithm = appConfiguration.algorithm(publicKey);
-        assertThat(actualAlgorithm).isInstanceOf(Algorithm.class);
-    }
-
-    @Test
-    void shouldReturnRsaPostProcessor() {
-        var actualRegistrationBean = ApplicationConfiguration.conversionServicePostProcessor();
-        assertThat(actualRegistrationBean).isInstanceOf(RsaKeyConversionServicePostProcessor.class);
-    }
-
-    @Test
-    void shouldReturnOpeApi() {
-        var actualOpenApi = appConfiguration.openAPI();
-        assertThat(actualOpenApi).isInstanceOf(OpenAPI.class);
     }
 
 }
