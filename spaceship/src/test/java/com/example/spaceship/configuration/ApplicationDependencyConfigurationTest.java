@@ -1,11 +1,14 @@
 package com.example.spaceship.configuration;
 
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.spaceship.filter.TokenFilter;
 import io.github.classgraph.ClassGraph;
 import io.swagger.v3.oas.models.OpenAPI;
 import net.bytebuddy.ByteBuddy;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.security.config.crypto.RsaKeyConversionServicePostProcessor;
 
 import java.security.interfaces.RSAPublicKey;
@@ -65,5 +68,19 @@ class ApplicationDependencyConfigurationTest {
         var actualOpenApi = appConfiguration.openAPI();
 
         assertThat(actualOpenApi).isInstanceOf(OpenAPI.class);
+    }
+
+    @Test
+    void shouldFilterRegistrationBean() {
+        var applicationConfiguration = new ApplicationDependencyConfiguration();
+        var tokenFilter = Mockito.mock(TokenFilter.class);
+        var expectedFilterRegistrationBean = new FilterRegistrationBean<TokenFilter>();
+        expectedFilterRegistrationBean.setFilter(tokenFilter);
+        expectedFilterRegistrationBean.addUrlPatterns("/*");
+
+        var actualRegistrationBean = applicationConfiguration.loggingFilter(tokenFilter);
+
+        Assertions.assertThat(actualRegistrationBean.getFilter()).isEqualTo(expectedFilterRegistrationBean.getFilter());
+        Assertions.assertThat(actualRegistrationBean.getUrlPatterns()).isEqualTo(expectedFilterRegistrationBean.getUrlPatterns());
     }
 }
