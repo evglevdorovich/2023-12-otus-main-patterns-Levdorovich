@@ -1,7 +1,7 @@
 package com.example.spaceship.service;
 
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.spaceship.dto.GameUser;
+import com.example.spaceship.dto.UserContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
@@ -31,8 +30,6 @@ class AccessTokenServiceJwtTest {
     private static final byte[] SIGNATURE_BYTES = new byte[]{1, 2, 3, 4, 5, 1, 2, 3, 4};
     @Mock
     private Algorithm algorithm;
-    @Mock
-    private Clock clock;
     @Spy
     private ObjectMapper objectMapper;
     @InjectMocks
@@ -63,9 +60,9 @@ class AccessTokenServiceJwtTest {
         var token = getToken();
         var username = "John Doe";
         var gameId = "2";
-        var expectedUserDto = new GameUser(username, gameId);
+        var expectedUserDto = new UserContext(username, gameId);
 
-        var userDto = accessTokenServiceJwt.getPayload(token, GameUser.class);
+        var userDto = accessTokenServiceJwt.getPayload(token, UserContext.class);
         assertThat(userDto).isEqualTo(expectedUserDto);
     }
 
@@ -73,7 +70,7 @@ class AccessTokenServiceJwtTest {
     void shouldThrowRuntimeExceptionWhenFailedToRead() {
         var incorrectToken = "incorrectToken";
 
-        assertThatThrownBy(() -> accessTokenServiceJwt.getPayload(incorrectToken, GameUser.class)).isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> accessTokenServiceJwt.getPayload(incorrectToken, UserContext.class)).isInstanceOf(RuntimeException.class);
     }
 
 

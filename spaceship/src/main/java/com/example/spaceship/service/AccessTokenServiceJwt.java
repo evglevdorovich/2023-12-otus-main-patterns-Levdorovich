@@ -10,13 +10,10 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.Clock;
-
 @Service
 @RequiredArgsConstructor
 public class AccessTokenServiceJwt implements AccessTokenService {
     private final Algorithm algorithm;
-    private final Clock clock;
     private final ObjectMapper objectMapper;
 
     @Value("${jwt.issuer}")

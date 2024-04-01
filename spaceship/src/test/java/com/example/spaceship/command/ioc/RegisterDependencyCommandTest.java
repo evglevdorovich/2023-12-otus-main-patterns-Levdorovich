@@ -23,7 +23,7 @@ class RegisterDependencyCommandTest {
         var registerDependencyCommand = new RegisterDependencyCommand(dependency, dependencyResolution);
 
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
-            ioC.when(IoC.resolve("IoC.Scope.Current")).thenReturn(currentScope);
+            ioC.when(() -> IoC.resolve("IoC.Scope.Current")).thenReturn(currentScope);
             registerDependencyCommand.execute();
         }
 
