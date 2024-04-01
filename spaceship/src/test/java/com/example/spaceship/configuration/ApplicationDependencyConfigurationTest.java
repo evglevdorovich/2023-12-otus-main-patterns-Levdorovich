@@ -1,6 +1,7 @@
 package com.example.spaceship.configuration;
 
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.spaceship.filter.OperationFilter;
 import com.example.spaceship.filter.TokenFilter;
 import io.github.classgraph.ClassGraph;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -71,7 +72,7 @@ class ApplicationDependencyConfigurationTest {
     }
 
     @Test
-    void shouldFilterRegistrationBean() {
+    void shouldRegisterFilterRegistrationBean() {
         var applicationConfiguration = new ApplicationDependencyConfiguration();
         var tokenFilter = Mockito.mock(TokenFilter.class);
         var expectedFilterRegistrationBean = new FilterRegistrationBean<TokenFilter>();
@@ -82,5 +83,19 @@ class ApplicationDependencyConfigurationTest {
 
         Assertions.assertThat(actualRegistrationBean.getFilter()).isEqualTo(expectedFilterRegistrationBean.getFilter());
         Assertions.assertThat(actualRegistrationBean.getUrlPatterns()).isEqualTo(expectedFilterRegistrationBean.getUrlPatterns());
+    }
+
+    @Test
+    void shouldRegisterRegistrationOperationFilterBean() {
+        var applicationConfiguration = new ApplicationDependencyConfiguration();
+        var operationFilter = Mockito.mock(OperationFilter.class);
+        var expectedRegistrationOperationFilterBean = new FilterRegistrationBean<OperationFilter>();
+        expectedRegistrationOperationFilterBean.setFilter(operationFilter);
+        expectedRegistrationOperationFilterBean.addUrlPatterns("/games/*");
+
+        var actualRegistrationBean = applicationConfiguration.registrationOperationFilter(operationFilter);
+
+        Assertions.assertThat(actualRegistrationBean.getFilter()).isEqualTo(expectedRegistrationOperationFilterBean.getFilter());
+        Assertions.assertThat(actualRegistrationBean.getUrlPatterns()).isEqualTo(expectedRegistrationOperationFilterBean.getUrlPatterns());
     }
 }

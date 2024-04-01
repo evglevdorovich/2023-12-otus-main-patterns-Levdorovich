@@ -1,6 +1,7 @@
 package com.example.spaceship.configuration;
 
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.spaceship.filter.OperationFilter;
 import com.example.spaceship.filter.TokenFilter;
 import io.github.classgraph.ClassGraph;
 import io.swagger.v3.oas.models.Components;
@@ -62,6 +63,17 @@ public class ApplicationDependencyConfiguration {
         registrationBean.setFilter(tokenFilter);
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+
+        return registrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<OperationFilter> registrationOperationFilter(OperationFilter operationFilter) {
+        var registrationBean = new FilterRegistrationBean<OperationFilter>();
+
+        registrationBean.setFilter(operationFilter);
+        registrationBean.addUrlPatterns("/games/*");
+        registrationBean.setOrder(1);
 
         return registrationBean;
     }

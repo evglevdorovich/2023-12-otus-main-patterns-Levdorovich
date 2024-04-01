@@ -27,7 +27,7 @@ public class SpaceshipController {
         return spaceshipService.rotate(id);
     }
 
-    @PostMapping("/game/{gameId}/player/{playerId}/operation")
+    @PostMapping("/games/{gameId}/players/{playerId}/operations")
     public ResponseEntity<String> operate(@PathVariable String gameId, @PathVariable String playerId,
                                           @RequestBody OperationRequest operationRequest) {
         var playerActionRequest = IoC.resolve("PlayerActionRequest", gameId, playerId, operationRequest);
