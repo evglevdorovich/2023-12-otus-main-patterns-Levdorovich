@@ -72,4 +72,5 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
         }
         verify(registerDependencyCommand, times(8)).execute();
     }
+
 }

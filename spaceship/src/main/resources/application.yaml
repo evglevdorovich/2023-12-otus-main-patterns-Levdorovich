@@ -13,3 +13,8 @@ queue:
 second-retry:
     enable: true
 
+jwt:
+    public_key: ${PUBLIC_KEY_LOCATION:classpath:keys/public-key.pem}
+    issuer: http://otus-2023-12-architecture-auth
+    audience: spaceship-client
+

@@ -98,11 +98,14 @@ class InitialisedIoCIT {
         Function<Object[], Object> parentDependencyResolution = a -> expectedResultThread2AfterResolution;
         Function<Object[], Object> thread1DependencyResolution = a -> expectedResultThread1AfterResolution;
 
+        var parentScope = IoC.resolve("IoC.Scope.Create", "parent", InitCommand.ROOT_SCOPE);
+        IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", parentScope).execute();
+
         IoC.<RegisterDependencyCommand>resolve("IoC.Register", dependencyName, parentDependencyResolution).execute();
 
 
         var thread1 = new Thread(() -> {
-            var scope = IoC.<Scope>resolve("IoC.Scope.Create", "thread1", InitCommand.ROOT_SCOPE);
+            var scope = IoC.<Scope>resolve("IoC.Scope.Create", "thread1", parentScope);
             IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", scope).execute();
             IoC.<RegisterDependencyCommand>resolve("IoC.Register", dependencyName, thread1DependencyResolution).execute();
             var actualResult = IoC.resolve(dependencyName, initialString);
@@ -111,7 +114,7 @@ class InitialisedIoCIT {
         });
 
         var thread2 = new Thread(() -> {
-            var scope = IoC.<Scope>resolve("IoC.Scope.Create", "thread2", InitCommand.ROOT_SCOPE);
+            var scope = IoC.<Scope>resolve("IoC.Scope.Create", "thread2", parentScope);
             IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", scope).execute();
             var actualResult = IoC.resolve(dependencyName, initialString);
 
