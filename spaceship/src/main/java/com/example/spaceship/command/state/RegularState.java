@@ -5,11 +5,13 @@ import com.example.spaceship.command.Command;
 import com.example.spaceship.command.state.command.HardStopQueueCommand;
 import com.example.spaceship.command.state.command.MoveToCommand;
 import com.example.spaceship.core.IoC;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Queue;
 
 @RequiredArgsConstructor
+@EqualsAndHashCode
 public class RegularState implements State {
     private final Queue<Command> commands;
 
@@ -24,8 +26,7 @@ public class RegularState implements State {
         command.execute();
 
         if (command.getClass().equals(MoveToCommand.class)) {
-            var moveToCommands = IoC.<Queue<Command>>resolve("IoC.Commands.Reserved", command);
-            return new MoveToState(commands, moveToCommands);
+            return IoC.<MoveToState>resolve("IoC.State.MoveTo", commands, command);
         }
         if (command.getClass().equals(HardStopQueueCommand.class)) {
             return null;

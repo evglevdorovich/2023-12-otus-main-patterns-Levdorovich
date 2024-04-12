@@ -63,19 +63,20 @@ class RegularStateTest {
 
     @Test
     void shouldReturnMoveToStateWhenMoveToCommand() {
-        var movedFromCommands = Mockito.mock(MoveToCommand.class);
+        var movedFromCommand = Mockito.mock(MoveToCommand.class);
         var movedToCommands = new LinkedList<Command>();
         var moveToState = new MoveToState(commands, movedToCommands);
 
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
-            ioC.when(() -> IoC.resolve("IoC.Commands.Reserved", movedFromCommands))
-                    .thenReturn(movedToCommands);
-            when(commands.poll()).thenReturn(movedFromCommands);
+            when(commands.poll()).thenReturn(movedFromCommand);
+            ioC.when(() -> IoC.resolve("IoC.State.MoveTo", commands, movedFromCommand))
+                    .thenReturn(moveToState);
+
             var actualState = regularState.handle();
             assertThat(actualState).isEqualTo(moveToState);
         }
 
-        verify(movedFromCommands).execute();
+        verify(movedFromCommand).execute();
     }
 
 }
