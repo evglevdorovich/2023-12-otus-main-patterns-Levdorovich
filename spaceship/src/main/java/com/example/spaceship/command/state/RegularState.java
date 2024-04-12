@@ -4,6 +4,7 @@ package com.example.spaceship.command.state;
 import com.example.spaceship.command.Command;
 import com.example.spaceship.command.state.command.HardStopQueueCommand;
 import com.example.spaceship.command.state.command.MoveToCommand;
+import com.example.spaceship.core.IoC;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Queue;
@@ -23,7 +24,8 @@ public class RegularState implements State {
         command.execute();
 
         if (command.getClass().equals(MoveToCommand.class)) {
-            return new MoveToState(commands);
+            var moveToCommands = IoC.<Queue<Command>>resolve("IoC.Commands.Reserved", command);
+            return new MoveToState(commands, moveToCommands);
         }
         if (command.getClass().equals(HardStopQueueCommand.class)) {
             return null;

@@ -9,7 +9,8 @@ import java.util.Queue;
 @RequiredArgsConstructor
 @Value
 public class MoveToState implements State {
-    Queue<Command> commands;
+    Queue<Command> moveFromCommands;
+    Queue<Command> moveToCommands;
     @Override
     public State handle() {
         return null;

@@ -3,16 +3,20 @@ package com.example.spaceship.command.state;
 import com.example.spaceship.command.Command;
 import com.example.spaceship.command.state.command.HardStopQueueCommand;
 import com.example.spaceship.command.state.command.MoveToCommand;
+import com.example.spaceship.core.IoC;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -59,13 +63,19 @@ class RegularStateTest {
 
     @Test
     void shouldReturnMoveToStateWhenMoveToCommand() {
-        var moveToCommand = Mockito.mock(MoveToCommand.class);
-        var moveToState = new MoveToState(commands);
-        when(commands.poll()).thenReturn(moveToCommand);
+        var movedFromCommands = Mockito.mock(MoveToCommand.class);
+        var movedToCommands = new LinkedList<Command>();
+        var moveToState = new MoveToState(commands, movedToCommands);
 
-        var actualState = regularState.handle();
-        verify(moveToCommand).execute();
-        assertThat(actualState).isEqualTo(moveToState);
+        try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
+            ioC.when(() -> IoC.resolve("IoC.Commands.Reserved", movedFromCommands))
+                    .thenReturn(movedToCommands);
+            when(commands.poll()).thenReturn(movedFromCommands);
+            var actualState = regularState.handle();
+            assertThat(actualState).isEqualTo(moveToState);
+        }
+
+        verify(movedFromCommands).execute();
     }
 
 }
