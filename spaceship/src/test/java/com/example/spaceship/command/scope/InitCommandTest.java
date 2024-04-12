@@ -1,5 +1,6 @@
 package com.example.spaceship.command.scope;
 
+import com.example.spaceship.IoCSetUpTest;
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.core.Scope;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class InitCommandTest {
+class InitCommandTest extends IoCSetUpTest {
 
     @AfterEach
     void cleanUp() {

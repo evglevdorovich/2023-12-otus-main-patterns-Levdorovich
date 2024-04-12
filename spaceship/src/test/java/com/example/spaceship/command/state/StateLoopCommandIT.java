@@ -1,24 +1,44 @@
 package com.example.spaceship.command.state;
 
-import com.example.spaceship.IoCSetUpTest;
 import com.example.spaceship.command.Command;
+import com.example.spaceship.command.scope.ClearCurrentScopeCommand;
+import com.example.spaceship.command.scope.InitCommand;
+import com.example.spaceship.command.scope.SetCurrentScopeCommand;
 import com.example.spaceship.command.state.command.HardStopQueueCommand;
 import com.example.spaceship.command.state.command.MoveToCommand;
 import com.example.spaceship.command.state.command.RunCommand;
+import com.example.spaceship.core.IoC;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.ArrayDeque;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
-@ExtendWith(MockitoExtension.class)
 @SpringBootTest
-class StateLoopCommandIT extends IoCSetUpTest {
+@DirtiesContext
+class StateLoopCommandIT {
+
+    @BeforeAll
+    static void init() {
+        new InitCommand().execute();
+        var scope = IoC.resolve("IoC.Scope.Create", "test");
+        IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", scope).execute();
+        InitCommand.setAlreadyExecuted(false);
+        IoC.clear();
+    }
+
+    @AfterAll
+    static void cleanUp() {
+        InitCommand.setAlreadyExecuted(false);
+        IoC.<ClearCurrentScopeCommand>resolve("IoC.Scope.Current.Clear").execute();
+        IoC.clear();
+    }
 
     @Test
     void shouldExecuteNormalCommandAndStop() {
