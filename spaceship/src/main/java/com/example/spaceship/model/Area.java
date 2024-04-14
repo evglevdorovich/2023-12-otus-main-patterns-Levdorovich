@@ -1,6 +1,6 @@
 package com.example.spaceship.model;
 
-import java.util.List;
+import java.util.Set;
 
-public record Area(List<Movable> movables) {
+public record Area(Set<Movable> movables) {
 }
