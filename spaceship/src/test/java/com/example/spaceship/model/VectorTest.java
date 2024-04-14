@@ -28,4 +28,13 @@ class VectorTest {
 
         assertThat(actualSize).isEqualTo(expectedSize);
     }
+
+    @Test
+    void shouldReturnCorrectCoordinate() {
+        var secondCoordinate = 2;
+        var vector = new Vector(List.of(1, secondCoordinate, 3));
+
+        var actualCoordinate = vector.getCoordinate(1);
+        assertThat(actualCoordinate).isEqualTo(secondCoordinate);
+    }
 }
