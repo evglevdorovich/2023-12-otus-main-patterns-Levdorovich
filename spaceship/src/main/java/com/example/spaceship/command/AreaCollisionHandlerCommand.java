@@ -24,6 +24,7 @@ public class AreaCollisionHandlerCommand implements Command {
     public void execute() {
         var initialArea = field.getArea(previousPosition);
         var areaAfterMove = field.getArea(movable.getPosition());
+        // if initial area == areaAfterMove it will be still added in the end
         initialArea.movables().remove(movable);
         var movedCollidable = IoC.<Collidable>resolve("Adapter", Collidable.class.getName(), movable);
 
