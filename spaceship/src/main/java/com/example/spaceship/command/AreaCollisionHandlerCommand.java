@@ -11,7 +11,7 @@ import lombok.Data;
 
 import java.util.Queue;
 
-@Builder
+@Builder(toBuilder = true)
 @Data
 public class AreaCollisionHandlerCommand implements Command {
     private Field field;
@@ -35,7 +35,6 @@ public class AreaCollisionHandlerCommand implements Command {
                 })
                 .toList();
         areaAfterMove.movables().add(movable);
-
         commandQueue.addAll(checkCollisionCommands);
     }
 }
