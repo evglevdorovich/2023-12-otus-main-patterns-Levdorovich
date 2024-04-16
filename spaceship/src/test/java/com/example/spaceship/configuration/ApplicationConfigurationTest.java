@@ -44,7 +44,7 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
 
         assertThat(InitCommand.isAlreadyExecuted()).isTrue();
         var expectedCurrentScopeDependencyResolutionNames = new String[]{"IoC.Scope.Parent", "Adapter.Register", "GameObject",
-                "GameObject.Commands.Register", "GameObject.Commands.Validate", "Queue.Register", "Queue"};
+                "GameObject.Commands.Register", "GameObject.Commands.Validate", "Queue.Register", "Queue", "IoC.State.Regular", "IoC.State.MoveTo"};
         var expectedRootScopeDependencyResolutionNames = new String[]{"IoC.Scope.Current.Set", "IoC.Scope.Current.Clear", "IoC.Scope.Current",
                 "IoC.Scope.Create.Empty", "IoC.Scope.Create", "IoC.Register", "IoC.Scope.Parent"};
 
@@ -70,7 +70,7 @@ class ApplicationConfigurationTest extends IoCSetUpTest {
                     .thenReturn(registerDependencyCommand);
             appConfiguration.configure();
         }
-        verify(registerDependencyCommand, times(8)).execute();
+        verify(registerDependencyCommand, times(10)).execute();
     }
 
 }

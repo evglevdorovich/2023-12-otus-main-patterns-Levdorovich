@@ -7,6 +7,9 @@ import com.example.spaceship.command.adapter.AdapterRegisterCreatorCommand;
 import com.example.spaceship.command.ioc.RegisterDependencyCommand;
 import com.example.spaceship.command.queue.RegisterCommand;
 import com.example.spaceship.command.scope.InitCommand;
+import com.example.spaceship.command.state.MoveToState;
+import com.example.spaceship.command.state.RegularState;
+import com.example.spaceship.command.state.command.MoveToCommand;
 import com.example.spaceship.core.Adapted;
 import com.example.spaceship.core.AdapterResolver;
 import com.example.spaceship.core.IoC;
@@ -21,6 +24,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -51,6 +55,18 @@ public class ApplicationConfiguration {
         prepareCommandsStorage(playerCommands);
 
         prepareQueueStorage(gameQueueStorageLocal);
+
+        registerStates();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void registerStates() {
+        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "IoC.State.Regular",
+                (Function<Object[], Object>) args -> new RegularState((Queue<Command>) args[0])).execute();
+
+        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "IoC.State.MoveTo",
+                (Function<Object[], Object>) args -> new MoveToState((Queue<Command>) args[0],
+                        ((MoveToCommand) args[1]).moveToCommands())).execute();
     }
 
     private static void prepareQueueStorage(GameQueueStorageLocal gameQueueStorageLocal) {
