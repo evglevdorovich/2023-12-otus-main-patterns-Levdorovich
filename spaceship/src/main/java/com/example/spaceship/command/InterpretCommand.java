@@ -10,8 +10,8 @@ public record InterpretCommand(PlayerActionRequest playerActionRequest) implemen
         var operationRequest = playerActionRequest.getOperationRequest();
         var gameObject = IoC.resolve("GameObject", playerActionRequest.getGameId(), playerActionRequest.getPlayerId());
         IoC.resolve("GameObject.Commands.Validate", playerActionRequest.getGameId(), playerActionRequest.getPlayerId(),
-                operationRequest.getId());
-        var commandToPerform = IoC.<Command>resolve(operationRequest.getId(), gameObject, operationRequest.getArgs());
+                operationRequest.getAction());
+        var commandToPerform = IoC.<Command>resolve(operationRequest.getAction(), gameObject, operationRequest.getArgs());
         IoC.<RegisterCommand>resolve("Queue.Register", playerActionRequest.getGameId(), commandToPerform).execute();
     }
 

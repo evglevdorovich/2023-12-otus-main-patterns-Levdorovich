@@ -29,7 +29,7 @@ class InterpretCommandTest extends IoCSetUpTest {
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
             ioC.when(() -> IoC.resolve("GameObject", playerActionRequest.getGameId(), playerActionRequest.getPlayerId()))
                     .thenReturn(gameObject);
-            ioC.when(() -> IoC.resolve(operationRequest.getId(), gameObject, operationRequest.getArgs()))
+            ioC.when(() -> IoC.resolve(operationRequest.getAction(), gameObject, operationRequest.getArgs()))
                     .thenReturn(command);
             ioC.when(() -> IoC.resolve("Queue.Register", playerActionRequest.getGameId(), command))
                     .thenReturn(putInQueueCommand);
@@ -37,7 +37,7 @@ class InterpretCommandTest extends IoCSetUpTest {
             new InterpretCommand(playerActionRequest).execute();
 
             ioC.verify(() -> IoC.resolve("GameObject.Commands.Validate", playerActionRequest.getGameId(),
-                    playerActionRequest.getPlayerId(), operationRequest.getId()));
+                    playerActionRequest.getPlayerId(), operationRequest.getAction()));
         }
         verify(putInQueueCommand).execute();
     }

@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class OperationRequest {
-    String id;
+    String action;
     Object[] args;
 }
