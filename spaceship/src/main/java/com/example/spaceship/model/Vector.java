@@ -22,6 +22,11 @@ public class Vector {
         return new Vector(resultCoordinates);
     }
 
+
+    public long getCoordinate(int index) {
+        return coordinates.get(index);
+    }
+
     public int size() {
         return coordinates.size();
     }
