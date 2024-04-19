@@ -28,11 +28,8 @@ public class SpaceshipController {
     }
 
     @PostMapping("/games/{gameId}/players/{playerId}/operations")
-    public ResponseEntity<String> operate(@PathVariable String gameId, @PathVariable String playerId,
-                                          @RequestBody OperationRequest operationRequest) {
-        //request is limited to the current player and round, playerId and gameId is validated with filters, it should be the same as in JWT
-        var playerActionRequest = IoC.resolve("PlayerActionRequest", gameId, playerId, operationRequest);
-        IoC.<Command>resolve("Commands.Interpret", playerActionRequest).execute();
+    public ResponseEntity<String> operate(@RequestBody OperationRequest operationRequest) {
+        IoC.<Command>resolve("Commands.Interpret", operationRequest).execute();
         return ResponseEntity.noContent().build();
     }
 }
