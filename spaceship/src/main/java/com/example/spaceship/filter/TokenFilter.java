@@ -1,8 +1,10 @@
 package com.example.spaceship.filter;
 
 import com.example.spaceship.command.ioc.RegisterDependencyCommand;
+import com.example.spaceship.command.scope.SetCurrentScopeCommand;
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.dto.UserContext;
+import com.example.spaceship.model.core.Scope;
 import com.example.spaceship.service.AccessTokenService;
 import com.example.spaceship.utils.TokenUtils;
 import jakarta.servlet.Filter;
@@ -39,6 +41,9 @@ public class TokenFilter implements Filter {
         try {
             var decodedToken = accessTokenService.verify(TokenUtils.withoutBearer(authorizationHeader));
             var userContext = accessTokenService.getPayload(decodedToken.getToken(), UserContext.class);
+            var playerScope = IoC.<Scope>resolve("IoC.Scope.Create.Empty", userContext.username() + ":" + userContext.gameId());
+            IoC.<SetCurrentScopeCommand>resolve("IoC.Scope.Current.Set", playerScope).execute();
+            //set user context for checking later
             IoC.<RegisterDependencyCommand>resolve("IoC.Register", "UserContext",
                     (Function<Object[], Object>) args -> userContext).execute();
 
