@@ -49,14 +49,24 @@ public class ApplicationConfiguration {
         var gamePlayerStorageLocal = new GamePlayerStorageLocal(new ConcurrentHashMap<>());
         var playerCommands = new GamePlayerCommandStorageLocal(new HashMap<>());
         var gameQueueStorageLocal = new GameQueueStorageLocal(new ConcurrentHashMap<>());
+        var interpretCommandsResolutions = new HashMap<String, Function<Object[], Object>>();
 
         prepareGameObjectStorage(gamePlayerStorageLocal);
-
         prepareCommandsStorage(playerCommands);
-
+        prepareInterpretCommands(interpretCommandsResolutions);
         prepareQueueStorage(gameQueueStorageLocal);
-
         registerStates();
+    }
+
+    private static void prepareInterpretCommands(HashMap<String, Function<Object[], Object>> interpretCommandsResolutions) {
+        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "Interpret.Commands.Resolution.Register", (Function<Object[], Object>)
+                args -> {
+                    interpretCommandsResolutions.put((String) args[0], (Function<Object[], Object>) args[1]);
+                    return null;
+                }).execute();
+
+        IoC.<RegisterDependencyCommand>resolve(IOC_REGISTER, "Interpret.Commands.Resolution", (Function<Object[], Object>)
+                args -> interpretCommandsResolutions.get(args[0]).apply((Object[]) args[1])).execute();
     }
 
     @SuppressWarnings("unchecked")
