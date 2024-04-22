@@ -29,8 +29,8 @@ public class OperationFilter implements Filter {
         var httpRequest = (HttpServletRequest) servletRequest;
         var requestUri = httpRequest.getRequestURI();
         var matcher = OPERATION_URI_PATTERN.matcher(requestUri);
-
         if (matcher.find()) {
+            //user context is taken from the scope of the user
             var userContext = IoC.<UserContext>resolve("UserContext");
             var gameId = matcher.group(GAME_ID_MATCHER_GROUP);
             var playerId = matcher.group(PLAYER_ID_MATCHING_GROUP);

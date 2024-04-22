@@ -28,10 +28,8 @@ public class SpaceshipController {
     }
 
     @PostMapping("/games/{gameId}/players/{playerId}/operations")
-    public ResponseEntity<String> operate(@PathVariable String gameId, @PathVariable String playerId,
-                                          @RequestBody OperationRequest operationRequest) {
-        var playerActionRequest = IoC.resolve("PlayerActionRequest", gameId, playerId, operationRequest);
-        IoC.<Command>resolve("Commands.Interpret", playerActionRequest).execute();
+    public ResponseEntity<String> operate(@RequestBody OperationRequest operationRequest) {
+        IoC.<Command>resolve("Commands.Interpret", operationRequest).execute();
         return ResponseEntity.noContent().build();
     }
 }

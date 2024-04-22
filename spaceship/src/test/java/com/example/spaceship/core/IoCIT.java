@@ -7,9 +7,9 @@ import com.example.spaceship.command.ioc.RegisterDependencyCommand;
 import com.example.spaceship.command.scope.ClearCurrentScopeCommand;
 import com.example.spaceship.command.scope.InitCommand;
 import com.example.spaceship.command.scope.SetCurrentScopeCommand;
+import com.example.spaceship.dto.UserContext;
 import com.example.spaceship.model.MovableFinishable;
 import com.example.spaceship.model.OperationRequest;
-import com.example.spaceship.model.PlayerActionRequest;
 import com.example.spaceship.model.Spaceship;
 import com.example.spaceship.model.Vector;
 import com.example.spaceship.model.VelocityAdjustable;
@@ -92,31 +92,49 @@ class IoCIT {
     void shouldInterpretCommand() {
         var gameId = "gameId";
         var playerId = "playerId";
+        addUserContext(playerId, gameId);
         var operationId = "changeVelocity";
         var expectedVelocity = List.of(2, 4);
         var arguments = new Object[]{new Vector(expectedVelocity)};
         var spaceShip = new Spaceship();
         spaceShip.setVelocity(new Vector(List.of(1, 2)));
         registerSetVelocity();
-        var playerActionRequest = new PlayerActionRequest(gameId, playerId, new OperationRequest(operationId, arguments));
+
+        registerInterpretCommandResolution(operationId);
+
+        var operationRequest = new OperationRequest(operationId, arguments);
 
         registerGameObject(gameId, playerId, spaceShip);
         registerCommands(gameId, playerId, operationId);
 
         registerChangeVelocityCommand();
 
-        var interpretCommand = new InterpretCommand(playerActionRequest);
+        var interpretCommand = new InterpretCommand(operationRequest);
         interpretCommand.execute();
 
-        executeCommandFromQueue(playerActionRequest);
+        executeCommandFromQueue(gameId);
 
         var actualCoordinates = spaceShip.getVelocity().getCoordinates();
 
         assertThat(actualCoordinates).isEqualTo(expectedVelocity);
     }
 
-    private static void executeCommandFromQueue(PlayerActionRequest playerActionRequest) {
-        var queue = IoC.<Queue<Command>>resolve("Queue", playerActionRequest.getGameId());
+    private static void registerInterpretCommandResolution(String operationId) {
+        IoC.resolve("Interpret.Commands.Resolution.Register", operationId,
+                (Function<Object[], Object>) args -> {
+                    var userContext = IoC.<UserContext>resolve("UserContext");
+                    var gameObject = IoC.resolve("GameObject", userContext.gameId(), userContext.username());
+                    return IoC.resolve("changeVelocity", gameObject, new Object[]{args[0]});
+                });
+    }
+
+    private static void addUserContext(String playerId, String gameId) {
+        IoC.<RegisterDependencyCommand>resolve("IoC.Register", "UserContext",
+                (Function<Object[], Object>) args -> new UserContext(playerId, gameId)).execute();
+    }
+
+    private static void executeCommandFromQueue(String gameId) {
+        var queue = IoC.<Queue<Command>>resolve("Queue", gameId);
         queue.poll().execute();
     }
 

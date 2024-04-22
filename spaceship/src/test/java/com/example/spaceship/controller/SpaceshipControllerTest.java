@@ -3,7 +3,6 @@ package com.example.spaceship.controller;
 import com.example.spaceship.command.Command;
 import com.example.spaceship.core.IoC;
 import com.example.spaceship.model.OperationRequest;
-import com.example.spaceship.model.PlayerActionRequest;
 import com.example.spaceship.model.Vector;
 import com.example.spaceship.service.SpaceshipService;
 import org.junit.jupiter.api.Test;
@@ -52,18 +51,13 @@ class SpaceshipControllerTest {
 
     @Test
     void shouldExecuteInterpretCommand() {
-        var gameId = "gameId";
-        var playerId = "playerId";
         var operationRequest = new OperationRequest("operationId", new Object[]{});
-        var playerActionRequest = new PlayerActionRequest(gameId, playerId, operationRequest);
         var command = Mockito.mock(Command.class);
 
         try (MockedStatic<IoC> ioC = mockStatic(IoC.class)) {
-            ioC.when(() -> IoC.resolve("PlayerActionRequest", gameId, playerId, operationRequest))
-                    .thenReturn(playerActionRequest);
-            ioC.when(() -> IoC.<Command>resolve("Commands.Interpret", playerActionRequest))
+            ioC.when(() -> IoC.<Command>resolve("Commands.Interpret", operationRequest))
                             .thenReturn(command);
-            spaceshipController.operate(gameId, playerId, operationRequest);
+            spaceshipController.operate(operationRequest);
         }
         verify(command).execute();
     }
